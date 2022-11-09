@@ -68,13 +68,16 @@ header {
     color: #89CFF0;
 }
 
-.awesome {
+.awesome { 
+    display: flex;
+    justify-content: space-between;
     background-color: #1f2937;
     color: #c6c7ca;
     display: flex;
     padding: 64px var(--CustomMargin);
     gap: 24px;
     flex-shrink: 1;
+    padding-bottom: 48px;
 }
 
 .left-awesome {
@@ -105,16 +108,63 @@ header {
 
 }
 
+h3 {
+    text-align: center;
+    margin: 20px 0px;
+}
+
 .boxes {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    /* align-items: center;
     justify-content: center;
     flex-direction: column;
-    flex: 1;
+    flex: 1; */
     /* margin: 36px var(--CustomMargin); */
-    padding: 48px var(--CustomMargin);
-    
+    /* padding: 48px var(--CustomMargin); */
+    padding: 48px 8px;
 }
+
+.image-column {
+    flex: 25%;
+    max-width: 25%;
+    padding: 0 4px;
+}
+
+.image-column img {
+    border-radius: 8px;
+    margin-top: 8px;
+    vertical-align: middle;
+    /* width: 100%; */
+    /* height: auto; */
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    /* width: 100%;
+    height: 100%; */
+    
+  }
+
+/* Responsive layout - makes a 2 column-layout instead of 2 columns */
+@media screen and (max-width: 800px) {
+    .image-column {
+      flex: 50%;
+      max-width: 50%;
+    }
+  }
+  
+  /* Responsive layout - makes the 2 columns stack on top of each other instead of next to each other */
+  @media screen and (max-width: 600px) {
+    .image-column {
+      flex: 100%;
+      max-width: 100%;
+    }
+    .image-column img {
+        height: auto;
+        width: 100%;
+        object-fit: scale-down;
+    }
+  }
 
 .image-cards {
     display: flex;
@@ -219,6 +269,9 @@ footer {
     }
     .awesome {
         flex-wrap: wrap;
+    }
+    .awesome img {
+        vertical-align: middle;
     }
     .call-to-action {
         padding: 5px 20px;
