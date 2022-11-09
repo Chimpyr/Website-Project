@@ -17,6 +17,10 @@ li {
     list-style: none;
 }
 
+.logo {
+    color: white;
+}
+
 a {
     text-decoration: none;
     color: #c6c7ca;
@@ -39,7 +43,7 @@ body {
 }
 
 
-header, .left-links {
+header, .nav-links {
     color: #e5e7eb;
     display: flex;
     gap: 24px;
@@ -51,7 +55,7 @@ header, .left-links {
 }
 
 header {
-    padding: 0px var(--CustomMargin);
+    padding: 0px 20px;
     color: #f9faf8;
     font-size: 2rem;
     background-color: #1f2937;
@@ -59,12 +63,12 @@ header {
     flex-basis: 1%;
 }
 
-.left-links {
+.nav-links {
     font-size: 1.2rem;
     font-weight: 400;
 }
 
-.left-links a:hover {
+.nav-links a:hover {
     color: #89CFF0;
 }
 
