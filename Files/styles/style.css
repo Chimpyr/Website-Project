@@ -43,7 +43,7 @@ body {
 }
 
 
-header, .nav-links {
+/* header, .nav-links {
     color: #e5e7eb;
     display: flex;
     gap: 24px;
@@ -70,7 +70,7 @@ header {
 
 .nav-links a:hover {
     color: #89CFF0;
-}
+} */
 
 .awesome { 
     display: flex;
