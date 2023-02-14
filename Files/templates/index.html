@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Horizon Travels</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <link rel="stylesheet" href="styles/defaultStyles.css">
+    <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/style.css')}}">
+    <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/defaultStyles.css')}}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet"> 
@@ -17,11 +17,11 @@
 <body>
 
     <header class="header-ht"> 
-        <a class="logo" href="/Files/index.html">Horizon Travels</a>
+        <a class="logo" href="{{ url_for('index') }}">Horizon Travels</a>
         <nav class="nav-links">
-            <li><a href="login.html">Log In</a></li>
-            <li><a href="book.html">Book Now</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="{{ url_for('login_route') }}">Log In</a></li>
+            <li><a href="{{ url_for('book_route') }}">Book Now</a></li>
+            <li><a href="{{ url_for('about_route') }}">About</a></li>
           <nav>
     </header>
 
@@ -40,7 +40,7 @@
 
     <content class="boxes">    
         <div class="image-column">
-            <img src="https://cdn.pixabay.com/photo/2014/08/10/20/29/castle-415074_960_720.jpg" alt="Image of a Castle in Utrecht, The Netherlands"  style="width:100%">
+            <img src="https://cdn.pixabay.com/photo/2016/11/22/19/17/buildings-1850129_960_720.jpg" alt="Image of a a City Skyline, New York City, USA"  style="width:100%">
             <img src="https://cdn.pixabay.com/photo/2020/07/23/01/16/heritage-5430081_960_720.jpg" alt="Image of Himeji Castle, Japan" style="width:100%">
         </div>
         <div class="image-column">
@@ -74,7 +74,7 @@
     </div>
 
     <footer> 
-        <p>Copyright © Horizon Travels 2022</p>
+        <p>Copyright © Horizon Travels 2023</p>
     </footer>
 </body>
 </html>

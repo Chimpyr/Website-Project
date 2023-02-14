@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About</title>
-    <link rel="stylesheet" href="styles/defaultStyles.css">
+    <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/defaultStyles.css')}}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
@@ -18,11 +18,11 @@
 </head>
 <body>
     <header class="header-ht"> 
-        <a class="logo text-decoration-none text-reset" href="/Files/index.html">Horizon Travels</a>
+        <a class="logo text-decoration-none text-reset" href="{{ url_for('index') }}">Horizon Travels</a>
         <nav class="nav-links">
-            <li><a href="login.html">Log In</a></li>
-            <li><a href="book.html">Book Now</a></li>
-            <li><a href="about.html">About</a></li>
+            <li><a href="{{ url_for('login_route') }}">Log In</a></li>
+            <li><a href="{{ url_for('book_route') }}">Book Now</a></li>
+            <li><a href="{{ url_for('about_route') }}">About</a></li>
         </nav>
     </header>
     <!-- Using accordion to display the infromation -->
