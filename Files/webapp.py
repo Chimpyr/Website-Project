@@ -8,21 +8,20 @@ def index():
    return render_template('index.html')
 
 @app.route('/about')
-def backgroundsizepage():
+def about_route():
    return render_template('about.html')
 
 @app.route('/book')
-def backgroundsizepage():
+def book_route():
    return render_template('book.html')
 
 @app.route('/login')
-def backgroundsizepage():
+def login_route():
    return render_template('login.html')
 
 @app.route('/register')
-def backgroundsizepage():
+def register_route():
    return render_template('register.html')
-   
    
 
 if __name__ == '__main__':
