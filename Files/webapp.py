@@ -9,7 +9,7 @@ def index():
 
 @app.route('/about')
 def about_route():
-   return render_template('about.html')
+   return render_template('aboutJinja.html')
 
 @app.route('/book')
 def book_route():
@@ -19,6 +19,10 @@ def book_route():
 def login_route():
    return render_template('login.html')
 
+@app.route('/loginJinja')
+def loginJinja_route():
+   return render_template('loginJinja.html')
+
 @app.route('/register')
 def register_route():
    return render_template('register.html')
@@ -27,9 +31,6 @@ def register_route():
 def base_route():
    return render_template('baseHTML.html')
 
-@app.route('/aboutJinja')
-def aboutJinja_route():
-   return render_template('aboutJinja.html')
    
 
 if __name__ == '__main__':
