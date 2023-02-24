@@ -6,6 +6,13 @@
     
 }
 
+
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .header-ht, .nav-links {
     color: #e5e7eb;
     display: flex;
@@ -43,6 +50,22 @@
 .nav-links a {
     text-decoration: none;
     color: #c6c7ca;
+}
+
+
+
+footer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #1f2937;
+    color: #f9faf8;
+    text-align: center;
+    height: 90px;
+    font-weight: 300;
+    margin-top: auto;
+    padding: 3.5vh;
 }
 
 .logo {

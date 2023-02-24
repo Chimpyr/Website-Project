@@ -22,6 +22,14 @@ def login_route():
 @app.route('/register')
 def register_route():
    return render_template('register.html')
+
+@app.route('/base')
+def base_route():
+   return render_template('baseHTML.html')
+
+@app.route('/aboutJinja')
+def aboutJinja_route():
+   return render_template('aboutJinja.html')
    
 
 if __name__ == '__main__':

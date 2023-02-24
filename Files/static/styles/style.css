@@ -254,17 +254,7 @@ h4 {
     font-size: 20px;
 }
 
-footer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: #1f2937;
-    color: #f9faf8;
-    text-align: center;
-    height: 90px;
-    font-weight: 200;
-}
+
 
 
 @media screen and (max-width: 768px) {
