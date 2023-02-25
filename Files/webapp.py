@@ -5,7 +5,11 @@ app = Flask(__name__)
 @app.route('/index')
 @app.route('/')
 def index():
-   return render_template('index.html')
+   return render_template('indexJinja.html')
+
+@app.route('/indexJinja')
+def indexJinja_route():
+   return render_template('indexJinja.html')
 
 @app.route('/about')
 def about_route():
