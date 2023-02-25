@@ -1,0 +1,133 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Register{% endblock %}
+{% block head %}
+    {{super()}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous" />
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/booking.css')}}">
+{% endblock %}
+
+{% block content %}
+<div id="booking" class="section bg-image" style="background-image: url('https://images.unsplash.com/photo-1524047934617-cb782c24e5f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');">
+  <div class="section-center">
+    <div class="container">
+      <div class="row">
+        <div class="booking-form">
+          <form>
+            <div class="form-group">
+              <span class="form-label">Travel Method</span>
+              <div class="form-checkbox mb-3">
+                <label for="coach">
+                  <input type="radio" id="coach" name="trip-type" />
+                  <span></span>Coach
+                </label>
+                <label for="train">
+                  <input type="radio" id="train" name="trip-type" />
+                  <span></span>Train
+                </label>
+                <label for="plane">
+                  <input type="radio" id="plane" name="trip-type" />
+                  <span></span>Plane
+                </label>
+              </div>
+              <div class="form-checkbox">
+                <span class="form-label">Travel Type</span>
+                <label for="roundtrip">
+                  <input type="radio" id="roundtrip" name="flight-type" />
+                  <span></span>Roundtrip
+                </label>
+                <label for="one-way">
+                  <input type="radio" id="one-way" name="flight-type" />
+                  <span></span>One way
+                </label>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-6">
+                <div class="form-group">
+                  <span class="form-label">Departing From</span>
+                  <input class="form-control" type="text" placeholder="City or airport/station" />
+                </div>
+              </div>
+              <div class="col-md-6">
+                <div class="form-group">
+                  <span class="form-label">Travelling to</span>
+                  <input class="form-control" type="text" placeholder="City or airport/station" />
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <span class="form-label">Departing</span>
+                  <input class="form-control" type="date" required="" />
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-group">
+                  <span class="form-label">Returning</span>
+                  <input class="form-control" type="date" required="" />
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span class="form-label">Adults</span>
+                  <select class="form-control">
+                    <option selected="selected">1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <div class="form-group">
+                  <span class="form-label">Children</span>
+                  <select class="form-control">
+                    <option selected="selected">0</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5</option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-3">
+                <div class="form-group">
+                  <span class="form-label">Travel class</span>
+                  <select class="form-control">
+                    <option selected="selected">Economy class</option>
+                    <option>Business class</option>
+                    <option>First class</option>
+                  </select>
+                  <span class="select-arrow"></span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="form-btn">
+                  <button class="submit-btn btn btn-lg btn-primary btn-login text-uppercase fw-semibold">Show tickets</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block footer %}       
+    {{super()}}
+{% endblock %}

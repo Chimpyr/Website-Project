@@ -1,0 +1,67 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Register{% endblock %}
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/login.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid ps-md-0">
+  <div class="row g-0">
+    <!-- using unsplash license (free to use, no attribution) -->
+    <div class="d-none d-md-flex col-md-4 col-lg-6 bg-image" style="background-image: url('https://images.unsplash.com/photo-1512999841639-d632843509fb?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=762&q=80');"></div>
+    <div class="col-md-8 col-lg-6">
+      <div class="login d-flex align-items-center py-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 col-lg-8 mx-auto">
+              <h3 class="login-heading mb-4 fw-semibold">Glad you're joining us!</h3>
+
+              <!-- Sign In Form -->
+              <form>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInput" placeholder="John">
+                  <label for="floatingInput">First Name</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="text" class="form-control" id="floatingInput" placeholder="Doe">
+                  <label for="floatingInput">Last Name</label>
+                </div>
+                <hr>
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                  <label for="floatingInput">Email address</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                  <label for="floatingInput">Confirm Email address</label>
+                </div>
+                <hr>
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                  <label for="floatingPassword">Password</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                  <label for="floatingPassword">Confirm Password</label>
+                </div>
+
+                <div class="d-grid">
+                  <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Register Now</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+{% block footer %}       
+    {{super()}}
+{% endblock %}

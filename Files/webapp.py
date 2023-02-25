@@ -13,11 +13,15 @@ def about_route():
 
 @app.route('/book')
 def book_route():
-   return render_template('book.html')
+   return render_template('bookJinja.html')
+
+@app.route('/bookJinja')
+def bookJinja_route():
+   return render_template('bookJinja.html')
 
 @app.route('/login')
 def login_route():
-   return render_template('login.html')
+   return render_template('loginJinja.html')
 
 @app.route('/loginJinja')
 def loginJinja_route():
@@ -25,7 +29,11 @@ def loginJinja_route():
 
 @app.route('/register')
 def register_route():
-   return render_template('register.html')
+   return render_template('registerJinja.html')
+
+@app.route('/registerJinja')
+def registerJinja_route():
+   return render_template('registerJinja.html')
 
 @app.route('/base')
 def base_route():
