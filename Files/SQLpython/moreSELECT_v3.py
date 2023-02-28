@@ -1,7 +1,7 @@
 import mysql.connector, dbfunc
 conn = dbfunc.getConnection()   #connection to DB
-DB_NAME = 'TEST_DB'             #DB Name
-TABLE_NAME = 'TEST_TABLE'
+DB_NAME = 'horizon_travels_test'             #DB Name
+TABLE_NAME = 'users'
 
 SELECT_statement = 'SELECT * FROM ' + TABLE_NAME +';'   
 if conn != None:    #Checking if connection is None
