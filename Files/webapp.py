@@ -75,6 +75,25 @@ def login_route():
     return render_template("loginJinja.html", form=form, error = error)
 
 
+def login_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:            
+            print("You need to login first")
+            #return redirect(url_for('login', error='You need to login first'))
+            return render_template('loginJinja.html', error='You need to login first')    
+    return wrap
+
+@app.route("/logout")
+@login_required
+def logout():    
+    session.clear()    #clears session variables
+    print("You have been logged out!")
+    gc.collect()
+    return render_template('indexJinja.html', optionalmessage='You have been logged out')
+
 
 @app.route('/register', methods=['POST', 'GET'])
 def register_route():
