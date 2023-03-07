@@ -5,12 +5,14 @@ from mysql.connector import errorcode
 hostname    = "localhost"
 username    = "root"
 passwd  = "pass" 
+database = "horizon_travels_test"
 
 def getConnection():    
     try:
         conn = mysql.connector.connect(host=hostname,                              
                               user=username,
-                              password=passwd)  
+                              password=passwd,
+                              database=database)  
     except mysql.connector.Error as err:
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
             print('User name or Password is not working')

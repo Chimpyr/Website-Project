@@ -32,9 +32,59 @@ def login_route():
    return render_template('loginJinja.html')
 
 
-@app.route('/register')
+@app.route('/register', methods=['POST', 'GET'])
 def register_route():
-   return render_template('registerJinja.html')
+    error = ''
+    print('Register start')
+    try:
+        if request.method == "POST":         
+            firstName = request.form['firstName']
+            lastName = request.form['lastName']
+            password = request.form['password']
+            email = request.form['email']                      
+            if firstName != None and lastName != None and password != None and email != None:           
+                conn = dbfunc.getConnection()
+                if conn != None:    #Checking if connection is None           
+                    if conn.is_connected(): #Checking if connection is established
+                        print('MySQL Connection is established')                          
+                        dbcursor = conn.cursor()    #Creating cursor object 
+                        #here we should check if email / email already exists   
+                        #hashing password                                                     
+                        password = sha256_crypt.hash((str(password)))    
+                               
+                        Verify_Query = "SELECT * FROM users WHERE email = %s;"
+                        dbcursor.execute(Verify_Query,(email,))
+                        rows = dbcursor.fetchall()           
+                        if dbcursor.rowcount > 0:   #this means there is a user with same email
+                            print('email already taken, please choose another')
+                            error = "Email already taken, please choose another"
+                            return render_template("registerJinja.html", error=error)    
+                        else:   #this means we can add new user             
+                            dbcursor.execute("INSERT INTO users (first_name, last_name, email, password_hash) VALUES (%s, %s, %s, %s)", (firstName, lastName, email, password))                
+                            conn.commit()  #saves data in database              
+                            print("Thanks for registering!")
+                            dbcursor.close()
+                            conn.close()
+                            gc.collect()                        
+                            session['logged_in'] = True     #session variables
+                            session['email'] = email
+                            session['usertype'] = 'standard'   #default all users are standard
+                            return render_template("success.html",\
+                             message='User registered successfully and logged in..')
+                    else:                        
+                        print('Connection error')
+                        return 'DB Connection Error'
+                else:                    
+                    print('Connection error')
+                    return 'DB Connection Error'
+            else:                
+                print('empty parameters')
+                return render_template("registerJinja.html", error=error)
+        else:            
+            return render_template("registerJinja.html", error=error)        
+    except Exception as e:                
+        return render_template("registerJinja.html", error=e)    
+    return render_template("registerJinja.html", error=error)
 
 
 

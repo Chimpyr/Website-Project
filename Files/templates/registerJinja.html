@@ -18,34 +18,35 @@
             <div class="col-md-9 col-lg-8 mx-auto">
               <h3 class="login-heading mb-4 fw-semibold">Glad you're joining us!</h3>
 
+              <p style="color:brown;">{{error}}</p>
               <!-- Sign In Form -->
               <form action="/register" method="post">
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="floatingInput" placeholder="John">
+                  <input type="text" class="form-control" id="floatingInput" placeholder="John" name="firstName" value="{{request.form.firstName}}">
                   <label for="floatingInput">First Name</label>
                 </div>
                 <div class="form-floating mb-3">
-                  <input type="text" class="form-control" id="floatingInput" placeholder="Doe">
+                  <input type="text" class="form-control" id="floatingInput" placeholder="Doe" name="lastName" value="{{request.form.lastName}}">
                   <label for="floatingInput">Last Name</label>
                 </div>
                 <hr>
                 <div class="form-floating mb-3">
-                  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" value="{{request.form.email}}">
                   <label for="floatingInput">Email address</label>
                 </div>
-                <div class="form-floating mb-3">
+                <!-- <div class="form-floating mb-3">
                   <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
                   <label for="floatingInput">Confirm Email address</label>
-                </div>
+                </div> -->
                 <hr>
                 <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" value="{{request.form.password}}">
                   <label for="floatingPassword">Password</label>
                 </div>
-                <div class="form-floating mb-3">
+                <!-- <div class="form-floating mb-3">
                   <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
                   <label for="floatingPassword">Confirm Password</label>
-                </div>
+                </div> -->
 
                 <div class="d-grid">
                   <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit" value="Register">Register Now</button>
