@@ -1,5 +1,15 @@
-from flask import Flask, render_template
+import mysql.connector
+import dbfunc
+from flask import Flask, render_template, request, session, redirect, url_for
+from passlib.hash import sha256_crypt
+import hashlib
+import gc
+from functools import wraps
 app = Flask(__name__)
+app.secret_key = 'suchSecret'     #secret key for sessions
+
+#establishing a database connectoion.
+dbfunc.getConnection()
 
 @app.route('/home')
 @app.route('/index')
@@ -7,9 +17,6 @@ app = Flask(__name__)
 def index():
    return render_template('indexJinja.html')
 
-@app.route('/indexJinja')
-def indexJinja_route():
-   return render_template('indexJinja.html')
 
 @app.route('/about')
 def about_route():
@@ -19,25 +26,25 @@ def about_route():
 def book_route():
    return render_template('bookJinja.html')
 
-@app.route('/bookJinja')
-def bookJinja_route():
-   return render_template('bookJinja.html')
 
 @app.route('/login')
 def login_route():
    return render_template('loginJinja.html')
 
-@app.route('/loginJinja')
-def loginJinja_route():
-   return render_template('loginJinja.html')
 
 @app.route('/register')
 def register_route():
    return render_template('registerJinja.html')
 
-@app.route('/registerJinja')
-def registerJinja_route():
-   return render_template('registerJinja.html')
+
+
+
+
+
+
+
+
+
 
 @app.route('/base')
 def base_route():
