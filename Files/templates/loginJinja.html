@@ -18,13 +18,15 @@
               <h3 class="login-heading mb-4 fw-semibold">Welcome!</h3>
 
               <!-- Sign In Form -->
-              <form>
+              <p style="color:red;"> {{error}} </p>
+
+              <form action="/login" method="post">
                 <div class="form-floating mb-3">
-                  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+                  <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com" name="email" value="{{request.form.email}}">
                   <label for="floatingInput">Email address</label>
                 </div>
                 <div class="form-floating mb-3">
-                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+                  <input type="password" class="form-control" id="floatingPassword" placeholder="Password" name="password" value="{{request.form.password}}">
                   <label for="floatingPassword">Password</label>
                 </div>
 
@@ -36,7 +38,7 @@
                 </div>
 
                 <div class="d-grid">
-                  <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit">Sign in</button>
+                  <button class="btn btn-lg btn-primary btn-login text-uppercase fw-bold mb-2" type="submit" value="Login">Sign in</button>
                   <div class="text-center">
                     <a class="small" href="#">Forgot password?</a>
                   </div>

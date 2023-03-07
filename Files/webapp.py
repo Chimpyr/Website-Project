@@ -27,9 +27,53 @@ def book_route():
    return render_template('bookJinja.html')
 
 
-@app.route('/login')
+#/login/ route receives email and password and checks against db user/pw
+@app.route('/login', methods=["GET","POST"])
 def login_route():
-   return render_template('loginJinja.html')
+    form={}
+    error = ''
+    try:	
+        if request.method == "POST":            
+            email = request.form['email']
+            password = request.form['password']            
+            form = request.form
+            print('login start 1.1')
+
+            if email != None and password != None:  #check if un or pw is none          
+                conn = dbfunc.getConnection()
+                if conn != None:    #Checking if connection is None                    
+                    if conn.is_connected(): #Checking if connection is established                        
+                        print('MySQL Connection is established')                          
+                        dbcursor = conn.cursor()    #Creating cursor object                                                 
+                        dbcursor.execute("SELECT password_hash, usertype \
+                            FROM users WHERE email = %s;", (email,))                                                
+                        data = dbcursor.fetchone()
+                        #print(data[0])
+                        if dbcursor.rowcount < 1: #this mean no user exists                         
+                            error = "User / password does not exist, login again"
+                            return render_template("loginJinja", error=error)
+                        else:                            
+                            #data = dbcursor.fetchone()[0] #extracting password   
+                            # verify passowrd hash and password received from user                                                             
+                            if sha256_crypt.verify(request.form['password'], str(data[0])):                                
+                                session['logged_in'] = True     #set session variables
+                                session['email'] = request.form['email']
+                                session['usertype'] = str(data[1])                          
+                                print("You are now logged in")                                
+                                return render_template('userresources.html', \
+                                    email=email, data='this is user specific data',\
+                                         usertype=session['usertype'])
+                            else:
+                                error = "Invalid credentials email/password, try again."                               
+                    gc.collect()
+                    print('login start 1.10')
+                    return render_template("loginJinja.html", form=form, error=error)
+    except Exception as e:                
+        error = str(e) + " <br/> Invalid credentials, try again."
+        return render_template("loginJinja.html", form=form, error = error)   
+    
+    return render_template("loginJinja.html", form=form, error = error)
+
 
 
 @app.route('/register', methods=['POST', 'GET'])
