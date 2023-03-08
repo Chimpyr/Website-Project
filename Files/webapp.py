@@ -1,6 +1,7 @@
 import mysql.connector
 import dbfunc
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from datetime import datetime
 from passlib.hash import sha256_crypt
 import hashlib
 import gc
@@ -20,11 +21,51 @@ def index():
 
 @app.route('/about')
 def about_route():
-   return render_template('aboutJinja.html')
+     return render_template('aboutJinja.html')
 
 @app.route('/book')
 def book_route():
-   return render_template('bookJinja.html')
+	conn = dbfunc.getConnection()
+	if conn != None:    #Checking if connection is None         
+		print('MySQL Connection is established')                          
+		dbcursor = conn.cursor()    #Creating cursor object            
+		dbcursor.execute('SELECT DISTINCT department_location FROM journey;')   
+		#print('SELECT statement executed successfully.')             
+		rows = dbcursor.fetchall()                                    
+		dbcursor.close()              
+		conn.close() #Connection must be 
+		cities = []
+		for city in rows:
+			city = str(city).strip("(")
+			city = str(city).strip(")")
+			city = str(city).strip(",")
+			city = str(city).strip("'")
+			cities.append(city)
+		return render_template('bookJinja.html', departurelist=cities)
+	else:
+		print('DB connection Error')
+		return 'DB Connection Error'
+
+@app.route ('/returncity/', methods = ['POST', 'GET'])
+def ajax_returncity():   
+	print('/returncity') 
+
+	if request.method == 'GET':
+		deptcity = request.args.get('q')
+		conn = dbfunc.getConnection()
+		if conn != None:    #Checking if connection is None         
+			print('MySQL Connection is established')                          
+			dbcursor = conn.cursor()    #Creating cursor object            
+			dbcursor.execute('SELECT DISTINCT arrival_location FROM journey WHERE department_location = %s;', (deptcity,))   
+			#print('SELECT statement executed successfully.')             
+			rows = dbcursor.fetchall()
+			total = dbcursor.rowcount                                    
+			dbcursor.close()              
+			conn.close() #Connection must be closed			
+			return jsonify(returncities=rows, size=total)
+		else:
+			print('DB connection Error')
+			return jsonify(returncities='DB Connection Error')
 
 
 #/login/ route receives email and password and checks against db user/pw
