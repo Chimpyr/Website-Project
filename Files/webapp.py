@@ -151,10 +151,65 @@ def register_route():
 
 
 
+#We also write a wrapper for admin user(s). It will check with the user is 
+# logged in and the usertype is admin and only then it will allow user to
+# perform admin functions
+def admin_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if ('logged_in' in session) and (session['usertype'] == 'admin'):
+            return f(*args, **kwargs)
+        else:            
+            print("You need to login first as admin user")
+            #return redirect(url_for('login', error='You need to login first as admin user'))
+            return render_template('loginJinja.html', error='You need to login first as admin user')    
+    return wrap
 
 
 
+#We also write a wrapper for standard user(s). It will check with the usertype is 
+#standard and user is logged in, only then it will allow user to perform standard user functions
+def standard_user_required(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if ('logged_in' in session) and (session['usertype'] == 'standard'):
+            return f(*args, **kwargs)
+        else:            
+            print("You need to login first as standard user")
+            #return redirect(url_for('login', error='You need to login first as standard user'))
+            return render_template('loginJinja.html', error='You need to login first as standard user')    
+    return wrap
 
+#/userfeatures is loaded for standard users
+# Here we us @standard_user_login_required wrapper ... 
+# this means that only users with user type standard can access this function
+# the function implements features related to standard users
+@app.route('/userfeatures')
+@login_required
+@standard_user_required
+def user_features():
+        print('fetchrecords')
+        #records from database can be derived
+        #user login can be checked..
+        print ('Welcome ', session['email'])
+        return render_template('standarduser.html', \
+            user=session['email'], message='User data from app and standard \
+                user features can go here....')
+
+#/adminfeatures is loaded for admin users
+# Here we us @admin_required wrapper ... 
+# this means that only users with user type admin can access this function
+# the function implements features related to admin users
+@app.route('/adminfeatures')
+@login_required
+@admin_required
+def admin_features():
+        print('create / amend records / delete records / generate reports')
+        #records from database can be derived, updated, added, deleted
+        #user login can be checked..
+        print ('Welcome ', session['email'], ' as ', session['usertype'])
+        return render_template('adminuser.html', user=session['email'],\
+             message='Admin data from app and admin features can go here ...')
 
 
 
