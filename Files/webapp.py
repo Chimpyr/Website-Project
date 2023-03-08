@@ -67,6 +67,42 @@ def ajax_returncity():
 			print('DB connection Error')
 			return jsonify(returncities='DB Connection Error')
 
+@app.route ('/selectBooking/', methods = ['POST', 'GET'])
+def selectBooking():
+	if request.method == 'POST':
+		#print('Select booking initiated')
+		departLocation = request.form['departureslist']
+		arrivalLocation = request.form['arrivalslist']
+		departDate = request.form['departDate']
+		returndate = request.form['returndate']
+		adultseats = request.form['adultseats']
+		childseats = request.form['childseats']
+		lookupdata = [departLocation, arrivalLocation, departDate, returndate, adultseats, childseats]
+		#print(lookupdata)
+		conn = dbfunc.getConnection()
+		if conn != None:    #Checking if connection is None         
+			print('MySQL Connection is established')                          
+			dbcursor = conn.cursor()    #Creating cursor object            
+			dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;', (departLocation, arrivalLocation))   
+		#	print('SELECT statement executed successfully.')             
+			rows = dbcursor.fetchall()
+			datarows=[]			
+			for row in rows:
+				data = list(row)                    
+				fare = (float(row[5]) * float(adultseats)) + (float(row[5]) * 0.5 * float(childseats))
+				#print(fare)
+				data.append(fare)
+				#print(data)
+				datarows.append(data)			
+			dbcursor.close()              
+			conn.close() #Connection must be closed
+			#print(datarows)
+			#print(len(datarows))			
+			return render_template('booking_start.html', resultset=datarows, lookupdata=lookupdata)
+		else:
+			print('DB connection Error')
+			return redirect(url_for('index'))
+
 
 #/login/ route receives email and password and checks against db user/pw
 @app.route('/login', methods=["GET","POST"])

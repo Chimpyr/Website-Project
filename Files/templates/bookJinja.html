@@ -90,7 +90,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <span class="form-label">Departing From</span>
-                  <select type="text" class="form-control" name="departureslist" onchange="getarrivalcity(this.value)"  placeholder="City">
+                  <select type="text" class="form-control" name="departureslist" onchange="getarrivalcity(this.value)"  placeholder="City" required>
                   
                   {% for departure in departurelist %}
 	                  <option value="{{departure}}"> {{departure}} </option>	    
@@ -102,7 +102,7 @@
               <div class="col-md-6">
                 <div class="form-group">
                   <span class="form-label">Travelling to</span>
-                  <select class="form-control" type="text" placeholder="City" id="arrivalslist" name="arrivalslist">
+                  <select class="form-control" type="text" placeholder="City" id="arrivalslist" name="arrivalslist" required>
                   </select>
                   <span class="select-arrow"></span>
                 </div>
@@ -112,26 +112,26 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <span class="form-label">Departing</span>
-                  <input class="form-control" type="date" required="" />
+                  <input class="form-control" type="date" required="" id="departDate" name="departDate"/>
                 </div>
               </div>
               <div class="col-md-3">
                 <div class="form-group">
                   <span class="form-label">Returning</span>
-                  <input class="form-control" type="date" required="" />
+                  <input class="form-control" type="date" required="" id="returndate" name="returndate"  />
                 </div>
               </div>
               <div class="col-md-2">
                 <div class="form-group">
                   <span class="form-label">Adults</span>
-                  <input class="form-control" type="number" name="adultseats" id="adultseats" required />
+                  <input class="form-control" type="number" name="adultseats" id="adultseats" value="1" max="120" min="1" required  />
                   <span class="select-arrow"></span>
                 </div>
               </div>
               <div class="col-md-2">
                 <div class="form-group">
                   <span class="form-label">Children</span>
-                  <select class="form-control">
+                  <select class="form-control" name="childseats" id="childseats" required>
                     <option selected="selected">0</option>
                     <option>1</option>
                     <option>2</option>
@@ -152,7 +152,7 @@
               <div class="col-md-3">
                 <div class="form-group">
                   <span class="form-label">Travel class</span>
-                  <select class="form-control">
+                  <select class="form-control" required>
                     <option selected="selected">Economy class</option>
                     <option>Business class</option>
                     <option>First class</option>
