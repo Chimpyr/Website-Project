@@ -1,0 +1,42 @@
+
+
+After booking selection:
+    Select option and payment
+    Check if user logged in
+        if not make user log in/make account
+        after logging in, go back to booking
+    Save booking under that users name in BOOKING table
+    print booking details as recipt on page
+End user features include: Register/Login/Logout/password update, view, update, cancel booking
+
+Booking Logic
+    Business is (Economy * 2)
+    Up to 3 Months in advance
+    discount based on advance time 
+        Between 80 and 90 days - 20%
+        Between 60 and 79 days - 10%
+        Between 45 and 59 days - 5%
+        Under 45 days No discount
+    Cancellations
+        Before 60 days - no charges
+        Between 30 to 60 days - 50% charge
+        Within 30 days - 100% charge. 
+
+
+
+
+Admin user perspective and features include:
+    1. Admin should be able to Login/Logout and update password
+    2. Admin should be able to perform following tasks: Adding/updating/removing journeys or
+    prices constraints or end user deails
+    3. Admin should be able to generate admin reports e.g., monthly sales, sales for each
+    journey, top customers etc.
+
+
+Both Account users
+    After logging in, nav bar should say account rather than log in
+    this page will allow the user to log out
+    this will allow the user to password update
+    this will allow the user to view, update and cancel bookings
+    
+

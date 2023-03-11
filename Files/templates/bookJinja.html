@@ -9,43 +9,10 @@
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
     crossorigin="anonymous">
   </script>
+  <script src="{{ url_for ('static', filename ='scripts/bookScript.js')}}" defer></script> 
   <script>
-    function getarrivalcity(deptcity)    
-  {
-        console.log('passed val = ' + deptcity);
-        var req = new XMLHttpRequest();        
-        arrivalslist = document.getElementById('arrivalslist');        
-        
-        req.onreadystatechange = function(){
-            if (req.readyState == 4){
-                if (req.status != 200){
-                    //error handling code here
-                }
-                else{
-                    var response = JSON.parse(req.responseText);                   
-                    //document.getElementById('myDiv').innerHTML = response.username
-                    var size = response.size;                   
-                    //alert(response.returncities[0]);
-                    //console.log(arrivalslist);
-                    for (var x=0; x < arrivalslist.length; x++){
-                        arrivalslist.remove(x);                        
-                    }
-                    
-                    for (var i=0; i < size; i++){  
 
-                            arrivalslist.add(new Option(response.returncities[i], response.returncities[i]));    
-                    }
-                       // var option = document.createElement("Option");
-                        //option.text = response.returncities;
-                        //arrivalslist.add(option);
-                }
-            }
-        }
-        req.open('GET', '/returncity/?q='+deptcity);
-        req.setRequestHeader("Content-type", "application/x-www-form-urlencoded");   
-        req.send(); 
-        return false;
-    }
+   
   
   </script>
     <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/booking.css')}}">
@@ -77,11 +44,11 @@
               <div class="form-checkbox">
                 <span class="form-label">Travel Type</span>
                 <label for="roundtrip">
-                  <input type="radio" id="roundtrip" name="flight-type" />
+                  <input type="radio" id="roundtrip" name="flight-type" onclick="travelType()" />
                   <span></span>Roundtrip
                 </label>
                 <label for="one-way">
-                  <input type="radio" id="one-way" name="flight-type" />
+                  <input type="radio" id="one-way" name="flight-type" onclick="travelType()"/>
                   <span></span>One way
                 </label>
               </div>
@@ -117,8 +84,9 @@
               </div>
               <div class="col-md-3">
                 <div class="form-group">
+                  <!-- If is ONE WAY do not DISPLAY returing -->
                   <span class="form-label">Returning</span>
-                  <input class="form-control" type="date" required="" id="returndate" name="returndate"  />
+                  <input class="form-control" type="date" id="returnDate" name="returnDate"  />
                 </div>
               </div>
               <div class="col-md-2">
