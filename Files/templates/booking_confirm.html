@@ -1,4 +1,9 @@
+{% extends "baseHTML.html" %}
 
+{% block title %}Book - Confirmation{% endblock %}
+
+
+{% block content %}
   <h1>This is start of the basic booking process</h1> 
   <!--[journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare, bookingid, deptTime, arrivTime]-->
   <form action="/dumpsVar/" method="POST">
@@ -19,6 +24,6 @@
   </form>  
   <a href="/">Go to Home Page</a>
   </p>
-
+ {% endblock %}
 
 

@@ -1,9 +1,7 @@
-<html>
-<head>
-    <title>Admin Page</title>
-</head>
-<body>
-	<div>		
+{% extends "baseHTML.html" %}
+
+{% block title %}Admin User{% endblock %}
+{% block content %} 	
 		<h1>Admin Features Page </h1>
         <h2>Welcome {{user}} !</h2> <br>
         <p style="color:green;"> {{message}} </p>        		
@@ -16,5 +14,4 @@
   
   <a href='/logout'> Logout </a> <br/>
   <a href="/index/admin">Return to main page</a>      
-</body>
-</html>
+{% endblock %}

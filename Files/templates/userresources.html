@@ -1,5 +1,7 @@
-<!DOCTYPE html>
-    <html><head></head><body>
+{% extends "baseHTML.html" %}
+
+{% block title %}User Resources{% endblock %}
+{% block content %} 
         <h1 style='color:green;'>Welcome {{email}}.</h1>        
         Here you can perform authorised operations <br/>
         data: {{data}} <br/>      
@@ -12,5 +14,5 @@
             <a href='/logout'> Logout </a> <br/>
         {% endif %}        
         <a href='/index'> Return to main page </a> <br/>
-    </body></html>
+{% endblock %}
 

@@ -1,8 +1,7 @@
-<html>
-<head>
-    <title>Standard Page</title>
-</head>
-<body>
+{% extends "baseHTML.html" %}
+
+{% block title %}Standard User{% endblock %}
+{% block content %}  
 	<div>		
 		<h1>Standard Features Page </h1>
         <h2>Welcome {{user}} !</h2> <br>
@@ -14,5 +13,4 @@
 
   <a href='/logout'> Logout </a> <br/>
   <a href="/index/standard">Return to main page</a>      
-</body>
-</html>
+{% endblock %}
