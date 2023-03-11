@@ -10,13 +10,13 @@ After booking selection:
 End user features include: Register/Login/Logout/password update, view, update, cancel booking
 
 Booking Logic
-    Business is (Economy * 2)
-    Up to 3 Months in advance
-    discount based on advance time 
-        Between 80 and 90 days - 20%
-        Between 60 and 79 days - 10%
-        Between 45 and 59 days - 5%
-        Under 45 days No discount
+    //Business is (Economy * 2)
+    //Up to 3 Months in advance
+    //discount based on advance time 
+    //    Between 80 and 90 days - 20%
+    //    Between 60 and 79 days - 10%
+    //    Between 45 and 59 days - 5%
+    //    Under 45 days No discount
     Cancellations
         Before 60 days - no charges
         Between 30 to 60 days - 50% charge
