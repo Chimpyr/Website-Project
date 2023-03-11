@@ -247,7 +247,7 @@ def register_route():
                             dbcursor.close()
                             conn.close()
                             gc.collect()
-                            session['logged_in'] = True  # session variables
+                            session['logged_in'] = True  #  session variables
                             session['email'] = email
                             # default all users are standard
                             session['usertype'] = 'standard'

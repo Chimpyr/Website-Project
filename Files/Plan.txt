@@ -1,4 +1,8 @@
 
+From Main Page;
+    When logged in Log in button will open user account
+        If admin, lead to admin page
+        If standard user - SU, lead to SU page
 
 After booking selection:
     Select option and payment
