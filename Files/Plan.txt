@@ -1,8 +1,14 @@
 
 From Main Page;
     When logged in Log in button will open user account
-        If admin, lead to admin page
+        If admin, route lead to admin page
         If standard user - SU, lead to SU page
+
+Both Account users
+    After logging in, nav bar should say account rather than log in
+    this page will allow the user to log out
+    this will allow the user to password update
+    this will allow the user to view, update and cancel bookings
 
 After booking selection:
     Select option and payment
@@ -14,6 +20,12 @@ After booking selection:
 End user features include: Register/Login/Logout/password update, view, update, cancel booking
 
 Booking Logic
+    Single OR Roundtrip
+        Single will book 1 single flight
+        Roundtrip will book 2 flights
+            BOOK 1 flight on day of departure
+            BOOK 1 flight on day of return
+
     //Business is (Economy * 2)
     //Up to 3 Months in advance
     //discount based on advance time 
@@ -37,10 +49,16 @@ Admin user perspective and features include:
     journey, top customers etc.
 
 
-Both Account users
-    After logging in, nav bar should say account rather than log in
-    this page will allow the user to log out
-    this will allow the user to password update
-    this will allow the user to view, update and cancel bookings
+
     
+
+Consider Legal, Ethical, Social and Professional Issues, See at Week 7 / 19 Lecture Slides
+    This is important to comply to, including the creation and handling of the website, such as CO2 emissions...
+    o Be aware and comply with legal aspects e.g. copyright
+    o Consider ethical issues e.g. privacy, transparency sustainable,
+    green aspects
+    o Consider social aspects e.g. diversity of users – WCAG, mobile
+    devices
+    o Consider professional aspects e.g. standards compliance,
+    requirements, testing, using mature technologies, security, etc.
 
