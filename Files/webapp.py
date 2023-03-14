@@ -224,7 +224,7 @@ def logout():
 
 @app.route('/changePassword', methods=['POST', 'GET'])
 @login_required
-def changePassword_route():
+def changePassword():
     error = ''
     print('Pass change start')
     try:
@@ -272,14 +272,11 @@ def changePassword_route():
                 print('empty parameters')
                 return render_template("changePassword.html", error=error)
         else:
-            return render_template("registerJinja.html", error=error)
+            return render_template("changePassword.html", error=error)
             
                                 
     except Exception as e:
-        return render_template("registerJinja.html", error=e)
-
-    if new_password != confirm_new_password:
-        return "New password and confirm new password do not match."
+        return render_template("changePassword.html", error=e)
 
     return render_template("changePassword.html", error=error)
 
