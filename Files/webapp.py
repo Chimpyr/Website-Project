@@ -17,6 +17,10 @@ dbfunc.getConnection()
 @app.route('/index')
 @app.route('/')
 def index():
+    # check if the user is logged in as admin
+        # then load the render template
+    # else if the user is logged in as standard user
+
     return render_template('indexJinja.html')
 
 

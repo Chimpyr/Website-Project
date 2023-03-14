@@ -18,9 +18,18 @@
     {% block header %}  
         <a class="logo text-decoration-none text-reset" href="{{ url_for('index') }}">Horizon Travels</a>
         <nav class="nav-links">
+            {% if session['usertype'] == 'admin' %}
+            <li><a href="{{ url_for('admin_features') }}">Account</a></li>
+            {% elif session['usertype'] == 'standard' %}
+            <li><a href="{{ url_for('user_features') }}">Account</a></li>
+            {% else %}
             <li><a href="{{ url_for('login_route') }}">Log In</a></li>
+            {% endif %}
+            
             <li><a href="{{ url_for('book_route') }}">Book Now</a></li>
             <li><a href="{{ url_for('about_route') }}">About</a></li>
+
+
         </nav>
     {% endblock %}
     </header>
