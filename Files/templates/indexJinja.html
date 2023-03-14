@@ -18,11 +18,14 @@
     <div class="left-awesome">
         <h2 id="about">Horizon Travels</h2>
         <p>Book your next journey with us. Find the cheapest travel tickets worldwide - be it by coach, train or plane!</p>
-        {% if optionalmessage == "You have been logged out" %}
+
+        {% if optionalmessage is none %}
+        
+        {% else %}
             <div class="m-0 p-0" style="background-color: #1f2937;">
                 <p class="alert alert-danger m-2" > {{optionalmessage}} </p>
             </div>
-        {% endif%}
+        {% endif %}
 
         <form action="{{ url_for('about_route') }}">
             <input type="submit" value="Learn More" />

@@ -1,6 +1,6 @@
 import mysql.connector
 import dbfunc
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
 from datetime import datetime
 from passlib.hash import sha256_crypt
 import hashlib
@@ -216,10 +216,20 @@ def login_required(f):
 @app.route("/logout")
 @login_required
 def logout():
+    message = request.args.get("message")
     session.clear()  # clears session variables
     print("You have been logged out!")
     gc.collect()
+
+    print(message)
+    if message == "PU":
+        optional_message = 'Password Updated'
+    else:
+        optional_message = 'You have been logged out'
+    # optional_message = message or "You have been logged out!"
+    return render_template("indexJinja.html", optionalmessage=optional_message)
     return render_template('indexJinja.html', optionalmessage='You have been logged out')
+    
 
 
 @app.route('/changePassword', methods=['POST', 'GET'])
@@ -259,7 +269,10 @@ def changePassword():
                                 conn.close()
                                 gc.collect()
                                 #loggs user out - makes them have to re log in with new password
-                                return redirect(url_for('logout'))
+                                flash("Your password has been changed successfully!")
+                                return redirect(url_for("logout", message="PU"))
+                                # return redirect(url_for("logout", message='PU', next=url_for("index")))
+                                # return redirect(url_for("logout", next=url_for("index", optionalmessage='ddd')))
                             else:
                                 error = "Invalid credentials email/password, try again."
                     else:
