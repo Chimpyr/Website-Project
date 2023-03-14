@@ -2,15 +2,28 @@
 
 {% block title %}Standard User{% endblock %}
 {% block content %}  
-	<div>		
-		<h1>Standard Features Page </h1>
-        <h2>Welcome {{user}} !</h2> <br>
-        <p style="color:blueviolet;"> {{message}} </p>        		
-	</div>
+<div class="container ps-md-0">
+  <div class="row d-flex justify-content-center text-center">
+    <div>		
+      <h1 class="pt-4">Welcome to Your Account</h1>
+          <!-- <h2>{{user}}!</h2> <br>
+          <p style="color:blueviolet;"> {{message}} </p>        		 -->
+    </div>
+  
 
-  For example standard user features are (functionality to be added):<br/>  
-  <button type="button" onclick="location.href='/generateuserrecord';">Retrieve user record</button><br/>
+    <div class="col-8 mt-4" >
+      <p>For example standard user features are (functionality to be added):</p>
+      <div class="col-8 mx-auto" role="group">
+        <button type="button" class="btn btn-success login-heading mb-1 mt-1 text-center fw-semibold  w-75" onclick="location.href='/generateuserrecord';">Retrieve user record</button> <br> 
+        <a href="/index/standard" class="btn btn-primary login-heading mb-1 mt-1 text-center fw-semibold w-75">Return to main page</a>  <br> 
+        <a href="{{ url_for('changePassword_route') }}" class="btn btn-danger login-heading mb-1 mt-1 text-center fw-semibold w-75">Update Password</a>  <br>
+        <a href='/logout' class="btn btn-outline-danger login-heading mb-1 mt-1 text-center fw-semibold w-75"> Logout </a>  
+      </div>
+    </div>
 
-  <a href='/logout'> Logout </a> <br/>
-  <a href="/index/standard">Return to main page</a>      
+
+  </div>
+</div>
+
+    
 {% endblock %}

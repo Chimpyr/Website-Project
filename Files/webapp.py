@@ -179,10 +179,16 @@ def login_route():
                                 session['logged_in'] = True
                                 session['email'] = request.form['email']
                                 session['usertype'] = str(data[1])
-                                print("You are now logged in")
-                                return render_template('userresources.html',
-                                                       email=email, data='this is user specific data',
+                                if (session['usertype'] == 'admin'):
+                                    return render_template('adminuser.html',
+                                                       user=session['email'],
                                                        usertype=session['usertype'])
+                                elif (session['usertype'] == 'standard'):
+                                    return render_template('standarduser.html',
+                                                       user=session['email'],
+                                                       usertype=session['usertype'])
+                                print("You are now logged in")
+                                
                             else:
                                 error = "Invalid credentials email/password, try again."
                     gc.collect()
@@ -215,6 +221,67 @@ def logout():
     gc.collect()
     return render_template('indexJinja.html', optionalmessage='You have been logged out')
 
+
+@app.route('/changePassword', methods=['POST', 'GET'])
+@login_required
+def changePassword_route():
+    error = ''
+    print('Pass change start')
+    try:
+        if request.method == "POST":
+            email = request.form['email']
+            old_password = request.form['old_password']
+            new_password = request.form['new_password']
+            confirm_new_password = request.form['confirm_new_password']
+            if email != None and old_password != None and new_password != None and confirm_new_password != None:
+                conn = dbfunc.getConnection()
+                if conn != None:  # Checking if connection is None
+                    if conn.is_connected():  # Checking if connection is established
+                        print('MySQL Connection is established')
+                        dbcursor = conn.cursor()  # Creating cursor object
+                        # hashing password
+                        newPasswordHashed = sha256_crypt.hash((str(new_password)))
+                        #selects password from email
+                        dbcursor.execute("SELECT password_hash, usertype \
+                            FROM users WHERE email = %s;", (email,))
+                        data = dbcursor.fetchone()
+                        if dbcursor.rowcount < 1:  # this mean no user exists
+                            error = "User / password does not exist, login again"
+                            return render_template("changePassword.html", error=error)
+                        else:
+                            # verify password hash and password received from user
+                            if sha256_crypt.verify(request.form['old_password'], str(data[0])): #
+                                query = "UPDATE users SET password_hash=%s WHERE email=%s;"
+                                dbcursor.execute(query, (newPasswordHashed, email))
+                                conn.commit()
+                                #change password to newPassword hash where email is...
+                                dbcursor.close()
+                                conn.close()
+                                gc.collect()
+                                #loggs user out - makes them have to re log in with new password
+                                return redirect(url_for('logout'))
+                            else:
+                                error = "Invalid credentials email/password, try again."
+                    else:
+                        print('Connection error')
+                        return 'DB Connection Error'
+                else:
+                    print('Connection error')
+                    return 'DB Connection Error'
+            else:
+                print('empty parameters')
+                return render_template("changePassword.html", error=error)
+        else:
+            return render_template("registerJinja.html", error=error)
+            
+                                
+    except Exception as e:
+        return render_template("registerJinja.html", error=e)
+
+    if new_password != confirm_new_password:
+        return "New password and confirm new password do not match."
+
+    return render_template("changePassword.html", error=error)
 
 @app.route('/register', methods=['POST', 'GET'])
 def register_route():
@@ -255,8 +322,11 @@ def register_route():
                             session['email'] = email
                             # default all users are standard
                             session['usertype'] = 'standard'
-                            return render_template("success.html",
-                                                   message='User registered successfully and logged in..')
+                            return render_template('standarduser.html',
+                                                       user=session['email'],
+                                                       usertype=session['usertype'])
+                            # return render_template("success.html",
+                            #                        message='User registered successfully and logged in..')
                     else:
                         print('Connection error')
                         return 'DB Connection Error'

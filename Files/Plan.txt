@@ -1,12 +1,12 @@
 
 From Main Page;
-    When logged in Log in button will open user account
-        If admin, route lead to admin page
-        If standard user - SU, lead to SU page
+    //When logged in Log in button will open user account
+    //    If admin, route lead to admin page
+       // If standard user - SU, lead to SU page
 
 Both Account users
-    After logging in, nav bar should say account rather than log in
-    this page will allow the user to log out
+  //  After logging in, nav bar should say account rather than log in
+  //  this page will allow the user to log out
     this will allow the user to password update
     this will allow the user to view, update and cancel bookings
 

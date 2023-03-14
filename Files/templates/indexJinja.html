@@ -11,12 +11,19 @@
 {% endblock %}
 
 {% block content %}
+<!-- style="color:red; text-align: center;" -->
 
-<p style="color:red; text-align: center;"> {{optionalmessage}} </p>
+
 <content class="awesome"> 
     <div class="left-awesome">
         <h2 id="about">Horizon Travels</h2>
         <p>Book your next journey with us. Find the cheapest travel tickets worldwide - be it by coach, train or plane!</p>
+        {% if optionalmessage == "You have been logged out" %}
+            <div class="m-0 p-0" style="background-color: #1f2937;">
+                <p class="alert alert-danger m-2" > {{optionalmessage}} </p>
+            </div>
+        {% endif%}
+
         <form action="{{ url_for('about_route') }}">
             <input type="submit" value="Learn More" />
         </form>
