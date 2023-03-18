@@ -175,9 +175,11 @@ def selectBooking():
         childseats = request.form['childseats']
         travelClass = request.form['travelClass']
 
+        # used in HTML jinja
         lookupdata = [departLocation, arrivalLocation, departDate,
                       returnDate, adultseats, childseats, travelClass]
         # print(lookupdata)
+
 
         conn = dbfunc.getConnection()
 

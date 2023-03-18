@@ -23,8 +23,15 @@
               Outward Date : {{lookupdata[2]}} <br/>
               <input type="hidden" name="outdate" id="outdate" value="{{lookupdata[2]}}"/>
               Return Date : {{lookupdata[3]}} <br/>
-              <input type="hidden" name="returndate" id="returndate" value="{{lookupdata[3]}}"/>
-              Adult Seats : {{lookupdata[4]}} <br/>
+
+            {% if isOneWay%}
+            
+            {% else %}
+            <input type="hidden" name="returnDate" id="returnDate" value="{{lookupdata[3]}}"/>
+            Adult Seats : {{lookupdata[4]}} <br/>
+            {% endif %}
+
+             
               <input type="hidden" name="adultseats" id="adultseats" value="{{lookupdata[4]}}"/>
               Child Seats : {{lookupdata[5]}} <br/>
               <input type="hidden" name="childseats" id="childseats" value="{{lookupdata[5]}}"/>
