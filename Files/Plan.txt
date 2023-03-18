@@ -7,14 +7,18 @@ From Main Page;
 Both Account users
   //  After logging in, nav bar should say account rather than log in
   //  this page will allow the user to log out
-    this will allow the user to password update
+  // this will allow the user to password update
     this will allow the user to view, update and cancel bookings
 
 After booking selection:
     Select option and payment
-    Check if user logged in
-        if not make user log in/make account
-        after logging in, go back to booking
+    //Check if user logged in   
+           // chose this option // 1- USE FLASK WRAPPERS/ ON BOOK BUTTON CLICK FUNCTION
+            2- CHECK IF LOGGED IN
+                IF SO, COMPLETE FORM AS USUAL
+                IF NOT, 
+                if not make user log in/make account
+                **didnt do this {}{} after logging in, go back to booking
     Save booking under that users name in BOOKING table
     print booking details as recipt on page
 End user features include: Register/Login/Logout/password update, view, update, cancel booking
@@ -42,7 +46,7 @@ Booking Logic
 
 
 Admin user perspective and features include:
-    1. Admin should be able to Login/Logout and update password
+//    1. Admin should be able to Login/Logout and update password
     2. Admin should be able to perform following tasks: Adding/updating/removing journeys or
     prices constraints or end user deails
     3. Admin should be able to generate admin reports e.g., monthly sales, sales for each

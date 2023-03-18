@@ -59,7 +59,7 @@ returnDate.addEventListener("change", function() {
  function travelType() {
    var oneWay = document.getElementById("one-way")
    var roundTrip = document.getElementById("roundtrip")
-   var returnDateBox = document.getElementById("returndate")
+   var returnDateBox = document.getElementById("returnDate")
 
    // returnDateBox.disabled = oneWay.checked ? true : false;
    if (oneWay.checked) {
