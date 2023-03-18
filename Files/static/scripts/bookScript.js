@@ -56,20 +56,19 @@ returnDate.addEventListener("change", function() {
 
 // THIS PART OF THE CODE ONLY WILL ALLOW THE RETURING DATE BOX TO BE ACTIVE IF ROUNDTRIP IS SELECTED - DISABLING WHEN ONE WAY IS SELECTED
 
-function travelType() {
-   var oneWay = document.getElementById("one-way")
-   var roundTrip = document.getElementById("roundtrip")
-   var returnDateBox = document.getElementById("returnDate")
-   //var isOneWay = False;
+function checkTravelType() {
+  //alert("func called");
+  var oneWay = document.getElementById("one-way");
+  var roundTrip = document.getElementById("roundtrip");
+  var returnDateBox = document.getElementById("returnDate");
 
-   // returnDateBox.disabled = oneWay.checked ? true : false;
-   if (oneWay.checked) {
-     returnDateBox.disabled = true;
-     returnDateBox.value = null;
-     //isOneWay = True;
-   } else {
-     returnDateBox.disabled = false;
-   }
+  // returnDateBox.disabled = oneWay.checked ? true : false;
+  if (oneWay.checked) {
+    returnDateBox.disabled = true;
+    returnDateBox.value = null;
+  } else {
+    returnDateBox.disabled = false;
+  }
 
 }
 

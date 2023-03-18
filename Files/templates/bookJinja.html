@@ -9,7 +9,7 @@
     integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
     crossorigin="anonymous">
   </script>
-  <script src="{{ url_for ('static', filename ='scripts/bookScript.js')}}" defer></script> 
+    <script src="{{ url_for ('static', filename ='scripts/bookScript.js')}}" defer></script> 
   <script>
 
    
@@ -44,11 +44,11 @@
               <div class="form-checkbox">
                 <span class="form-label">Travel Type</span>
                 <label for="roundtrip">
-                  <input type="radio" name="travelType" id="roundtrip" value="roundtrip" onclick="travelType()" />
+                  <input type="radio" name="travelType" id="roundtrip" value="roundtrip" onclick="checkTravelType()" />
                   <span></span>Roundtrip
                 </label>
                 <label for="one-way">
-                  <input type="radio" name="travelType" id="one-way" value="one-way" onclick="travelType()"/>
+                  <input type="radio" name="travelType" id="one-way" value="one-way" onclick="checkTravelType()"/>
                   <span></span>One way
                 </label>
               </div>

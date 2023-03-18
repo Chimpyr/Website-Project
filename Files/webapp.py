@@ -174,16 +174,20 @@ def selectBooking():
         adultseats = request.form['adultseats']
         childseats = request.form['childseats']
         travelClass = request.form['travelClass']
-        # travelType = request.form['travelType']
-        travelTypeVal = request.form.get('travelType')
+        travelType = request.form['travelType']
 
         # used in HTML jinja
         lookupdata = [departLocation, arrivalLocation, departDate,
                       returnDate, adultseats, childseats, travelClass]
         # print(lookupdata)
 
+        isOneWay = False
+        if(travelType == "one-way"):
+            isOneWay = True
+        
         print('travel type is vvvv')
-        print(travelTypeVal)
+        print(travelType)
+        print(isOneWay)
         conn = dbfunc.getConnection()
 
         if conn != None:  # Checking if connection is None
