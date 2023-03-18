@@ -174,13 +174,16 @@ def selectBooking():
         adultseats = request.form['adultseats']
         childseats = request.form['childseats']
         travelClass = request.form['travelClass']
+        # travelType = request.form['travelType']
+        travelTypeVal = request.form.get('travelType')
 
         # used in HTML jinja
         lookupdata = [departLocation, arrivalLocation, departDate,
                       returnDate, adultseats, childseats, travelClass]
         # print(lookupdata)
 
-
+        print('travel type is vvvv')
+        print(travelTypeVal)
         conn = dbfunc.getConnection()
 
         if conn != None:  # Checking if connection is None
