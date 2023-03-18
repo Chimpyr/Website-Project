@@ -66,8 +66,12 @@ function checkTravelType() {
   if (oneWay.checked) {
     returnDateBox.disabled = true;
     returnDateBox.value = null;
+    returnDateBox.style.color = "#c0c0c0";  // change text color to gray
+    returnDateBox.style.border = "1px solid #c0c0c0";  // add a gray border;
   } else {
     returnDateBox.disabled = false;
+    returnDateBox.style.color = "";  // reset text color
+    returnDateBox.style.border = "";  // remove border
   }
 
 }

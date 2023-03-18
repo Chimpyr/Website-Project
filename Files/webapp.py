@@ -184,6 +184,7 @@ def selectBooking():
         isOneWay = False
         if(travelType == "one-way"):
             isOneWay = True
+        # use this to decide if to create 1 or more bookings etc. / not needing the return date for loading the next page booking_start
         
         print('travel type is vvvv')
         print(travelType)
