@@ -1,0 +1,67 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Booking View{% endblock %}
+{% block head %}
+    {{super()}}
+{% endblock %}
+
+{% block content %}
+<div class="container ps-md-0">
+    <div class="row d-flex justify-content-center text-center">
+      <div>		
+        <h1 class="pt-4">Here Are Your Current Bookings {{ user_id }}</h1>
+            <!-- <h2>{{user}}!</h2> <br>
+            <p style="color:blueviolet;"> {{message}} </p>        		 -->
+      </div>
+      <div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>Journey ID</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Start Location</th>
+          <th>End Location</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+          <th>Passenger No.</th>
+          <th>Book Date</th>
+          <th>Cancellation Date</th>
+          <th>Fare Type</th>
+          <th>Booking Cost</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for booking in bookings %}
+        <tr>
+          <td>{{ booking[0] }}</td>
+          <td>{{ booking[2] }}</td>
+          <td>{{ booking[5] }}</td>
+          <td>{{ booking[6] }}</td>
+          <td>{{ booking[7] }}</td>
+          <td>{{ booking[8] }}</td>
+          <td>{{ booking[9] }}</td>
+          <td>{{ booking[10] }}</td>
+          <td>{{ booking[11] }}</td>
+          <td>{{ booking[12] }}</td>
+          <td>{{ booking[13] }}</td>
+          <td>{{ booking[14] }}</td>
+          <td>{{ booking[15] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+      </div>
+
+    </div>
+  </div>
+
+{% endblock %}
+
+
+{% block footer %}       
+    {{super()}}
+{% endblock %}

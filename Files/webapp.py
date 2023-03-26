@@ -39,7 +39,7 @@ def book_route():
         # print('SELECT statement executed successfully.')
         rows = dbcursor.fetchall()
         dbcursor.close()
-        conn.close()  # Connection must be
+        conn.close()  # Connection must be closed
         cities = []
         for city in rows:
             city = str(city).strip("(")
@@ -52,6 +52,22 @@ def book_route():
         print('DB connection Error')
         return 'DB Connection Error'
 
+
+@app.route('/bookingview')
+def bookingView():
+    conn = dbfunc.getConnection()
+    if conn != None:  # Checking if connection is None
+        user_id = 1010
+        dbcursor = conn.cursor()  # Creating cursor object
+        query = "SELECT * FROM booking WHERE user_id = %s"
+        dbcursor.execute(query, (user_id,))
+        bookings = dbcursor.fetchall()
+        dbcursor.close()
+        conn.close()  # Connection must be closed
+        return render_template('bookingView.html', bookings=bookings)
+    else:
+            print('DB connection Error')
+            return 'DB Connection Error'
 
 @app.route('/returncity/', methods=['POST', 'GET'])
 def ajax_returncity():
@@ -302,8 +318,23 @@ def selectBooking():
 
             
 
+def getUserID():
+    conn = dbfunc.getConnection()
+    if conn != None:
+            print('MySQL Connection is established')
+            dbcursor = conn.cursor()  # Creating cursor object
 
-
+        #getting the user_id to store booking with user's id
+            userEmail = user=session['email']
+            print("email is : " + userEmail)
+            dbcursor.execute("SELECT user_id FROM users WHERE email = %s;", (userEmail,))
+            userID = dbcursor.fetchone()[0] # gets the straight int value instead of tuple
+            print("user id = " + str(userID))
+            return userID
+    else:
+        print('DB connection Error')
+        return redirect(url_for('index'))
+            
 
 @app.route('/booking_confirm/', methods=['POST', 'GET'])
 def booking_confirm():
