@@ -11,30 +11,22 @@
       <div>		
 
         {% if message %}
-
             {% if alert_type == "success" %}
                 <div class="alert alert-success alert-dismissible fade show mt-4 pt-4" role="alert">
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-                
                 </div>
             {% else %}
                 <div class="alert alert-danger alert-dismissible fade show mt-4 pt-4" role="alert"> 
                     {{ message }}
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
-
                 </div>
             {% endif %}
-
-            
         {% endif %}
 
-
-        <h1 class="pt-4">Here Are Your Current Bookings {{ user_id }}</h1>
-            <!-- <h2>{{user}}!</h2> <br>
-            <p style="color:blueviolet;"> {{message}} </p>        		 -->
+        <h1 class="pt-4">Here Are Your Current Bookings {{ user_id }}</h1>   
       </div>
       <div>
 
@@ -44,7 +36,6 @@
                 <tr>
                   <th></th>
                   <th>Booking ID</th>
-                  <th>Journey ID</th>
                   <th>Start Date</th>
                   <th>End Date</th>
                   <th>Start Location</th>
@@ -53,8 +44,7 @@
                   <th>End Time</th>
                   <th>Passenger No.</th>
                   <th>Book Date</th>
-                  <th>Cancellation Date</th>
-                  <th>Fare Type</th>
+                  <th>Class</th>
                   <th>Booking Cost</th>
                 </tr>
               </thead>
@@ -63,8 +53,6 @@
                 <tr>
                   <td><input type="radio" name="booking_id" value="{{ booking[0] }}"></td>
                   <td>{{ booking[0] }}</td>
-                  <td>{{ booking[1] }}</td>
-                  <td>{{ booking[2] }}</td>
                   <td>{{ booking[3] }}</td>
                   <td>{{ booking[4] }}</td>
                   <td>{{ booking[5] }}</td>
@@ -73,8 +61,8 @@
                   <td>{{ booking[8] }}</td>
                   <td>{{ booking[9] }}</td>
                   <td>{{ booking[10] }}</td>
-                  <td>{{ booking[11] }}</td>
                   <td>{{ booking[12] }}</td>
+                  <td> Broken</td>
                 </tr>
                 {% endfor %}
               </tbody>
