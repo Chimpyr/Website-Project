@@ -191,53 +191,181 @@ def selectBooking():
         print(isOneWay)
         conn = dbfunc.getConnection()
 
+        #change to if isOneWay, True is Temporary
+        if True:
+            if conn != None:  # Checking if connection is None
+                print('MySQL Connection is established')
+                dbcursor = conn.cursor()  # Creating cursor object
+                dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;',
+                                (departLocation, arrivalLocation))
+                # print('SELECT statement executed successfully.')
+                rows = dbcursor.fetchall()
+                datarows = []
+
+                for row in rows:
+                    data = list(row)
+                    fare = (float(row[5]) * float(adultseats)) + \
+                        (float(row[5]) * 0.5 * float(childseats))
+                    print('fare:' + str(fare))
+                    # fare is doubled for business class, this is done before advance booking as that is the last step
+                    if travelClass == 'Business class':
+                        fare = fare * 2
+
+                    # departDate = request.form['departDate']
+                    # Convert departDate string to date object
+                    depart_date = datetime.strptime(
+                        departDate, '%Y-%m-%d').date()
+
+                    today = datetime.now().date()
+                    # Calculate the number of days between today and the departure date
+                    advance_time = (depart_date - today).days
+
+                    if advance_time >= 80:  # 20% discount if booking is made between 80 and 90 days in advance
+                        fare = fare * 0.8
+                    elif advance_time >= 60:  # 10% discount if booking is made between 60 and 79 days in advance
+                        fare = fare * 0.9
+                    elif advance_time >= 45:  # 5% discount if booking is made between 45 and 59 days in advance
+                        fare = fare * 0.95
+                    else:  # No discount if booking is made less than 45 days in advance
+                        fare = fare
+
+                    print('fare:' + str(fare))
+                    print('travel class: ' + travelClass)
+                    data.append(fare)
+                    # print(data)
+                    datarows.append(data)
+
+                dbcursor.close()
+                conn.close()  # Connection must be closed
+                # print(datarows)
+                # print(len(datarows))
+                return render_template('booking_start.html', resultset=datarows, lookupdata=lookupdata)
+            else:
+                print('DB connection Error')
+                return redirect(url_for('index'))
+        # else:
+        #for return trips IGNORE FOR NOW
+
+            # if conn != None:  # Checking if connection is None
+            #     print('MySQL Connection is established')
+            #     dbcursor = conn.cursor()  # Creating cursor object
+
+            #     #other way around as it is a return flight
+            #     dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;',
+            #                     (arrivalLocation, departLocation))
+            #     # print('SELECT statement executed successfully.')
+            #     rows = dbcursor.fetchall()
+            #     datarows = []
+
+            #     for row in rows:
+            #         data = list(row)
+            #         print("260data: " + str(data))
+            #         fare = (float(row[5]) * float(adultseats)) + \
+            #             (float(row[5]) * 0.5 * float(childseats))
+            #         print('fareb4:' + str(fare))
+            #         # fare is doubled for business class, this is done before advance booking as that is the last step
+            #         if travelClass == 'Business class':
+            #             fare = fare * 2
+
+            #         # Convert departDate string to date object
+            #         # is return date as it is a return flight
+            #         depart_date = datetime.strptime(
+            #             departDate, '%Y-%m-%d').date()
+
+            #         today = datetime.now().date()
+            #         # Calculate the number of days between today and the departure date
+            #         advance_time = (depart_date - today).days
+
+            #         if advance_time >= 80:  # 20% discount if booking is made between 80 and 90 days in advance
+            #             fare = fare * 0.8
+            #         elif advance_time >= 60:  # 10% discount if booking is made between 60 and 79 days in advance
+            #             fare = fare * 0.9
+            #         elif advance_time >= 45:  # 5% discount if booking is made between 45 and 59 days in advance
+            #             fare = fare * 0.95
+            #         else:  # No discount if booking is made less than 45 days in advance
+            #             fare = fare
+
+            #         print('fare:' + str(fare))
+            #         print('travel class: ' + travelClass)
+            #         data.append(fare)
+            #         print("288data: " + str(data))
+            #         datarows.append(data)
+
+            #     dbcursor.close()
+            #     conn.close()  # Connection must be closed
+            #     # print(datarows)
+            #     # print(len(datarows))
+            #     return render_template('booking_start.html', resultset=datarows, lookupdata=lookupdata)
+            # else:
+            #     print('DB connection Error')
+            #     return redirect(url_for('index'))
+
+            
+
+
+
+
+@app.route('/booking_confirm/', methods=['POST', 'GET'])
+def booking_confirm():
+    if request.method == 'POST':
+        print('booking confirm initiated')
+        journeyid = request.form['bookingchoice']
+        departcity = request.form['deptcity']
+        arrivalcity = request.form['arrivcity']
+        outdate = request.form['outdate']
+        returndate = request.form['returnDate']
+        adultseats = request.form['adultseats']
+        childseats = request.form['childseats']
+        totalfare = request.form['totalfare']
+        cardnumber = request.form['cardnumber']
+ 
+        
+
+        totalseats = int(adultseats) + int(childseats)
+        bookingdata = [journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare]
+
+        conn = dbfunc.getConnection()
         if conn != None:  # Checking if connection is None
             print('MySQL Connection is established')
             dbcursor = conn.cursor()  # Creating cursor object
-            dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;',
-                             (departLocation, arrivalLocation))
-            # print('SELECT statement executed successfully.')
+
+
+            #getting the user_id to store booking with user's id
+            userEmail = user=session['email']
+            print("email is : " + userEmail)
+            dbcursor.execute("SELECT user_id FROM users WHERE email = %s;", (userEmail,))
+            userID = dbcursor.fetchone()[0] # gets the straight int value instead of tuple
+            print("user id = " + str(userID))
+
+
+
+            dbcursor.execute('SELECT LAST_INSERT_ID();')
+            rows = dbcursor.fetchone()
+            bookingid = rows[0]
+            bookingdata.append(bookingid)
+
+            dbcursor.execute('SELECT * FROM journey WHERE journey_id = %s;', (journeyid,))
             rows = dbcursor.fetchall()
-            datarows = []
+            deptTime = rows[0][2] # corresponding column depTime
+            arrivTime = rows[0][4] # corresponding column arrivTime
+            bookingdata.append(deptTime)
+            bookingdata.append(arrivTime)
 
-            for row in rows:
-                data = list(row)
-                fare = (float(row[5]) * float(adultseats)) + \
-                    (float(row[5]) * 0.5 * float(childseats))
-                print('fare:' + str(fare))
-                # fare is doubled for business class, this is done before advance booking as that is the last step
-                if travelClass == 'Business class':
-                    fare = fare * 2
+            #get book date
+            today = datetime.now().date()
 
-                # departDate = request.form['departDate']
-                # Convert departDate string to date object
-                depart_date = datetime.strptime(
-                    departDate, '%Y-%m-%d').date()
 
-                today = datetime.now().date()
-                # Calculate the number of days between today and the departure date
-                advance_time = (depart_date - today).days
+            dbcursor.execute('INSERT INTO booking (start_date, end_date, journey_id, passenger_no, booking_cost, user_id, start_location, end_location, start_time, end_time, book_date) VALUES \
+                            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);', (outdate, returndate, journeyid, totalseats, totalfare, userID, departcity, arrivalcity, deptTime, arrivTime, today,))
+            print('Booking statement executed successfully.')
+            conn.commit()
 
-                if advance_time >= 80:  # 20% discount if booking is made between 80 and 90 days in advance
-                    fare = fare * 0.8
-                elif advance_time >= 60:  # 10% discount if booking is made between 60 and 79 days in advance
-                    fare = fare * 0.9
-                elif advance_time >= 45:  # 5% discount if booking is made between 45 and 59 days in advance
-                    fare = fare * 0.95
-                else:  # No discount if booking is made less than 45 days in advance
-                    fare = fare
-
-                print('fare:' + str(fare))
-                print('travel class: ' + travelClass)
-                data.append(fare)
-                # print(data)
-                datarows.append(data)
+            cardnumber = cardnumber[-4:-1]
+            print(cardnumber)
 
             dbcursor.close()
-            conn.close()  # Connection must be closed
-            # print(datarows)
-            # print(len(datarows))
-            return render_template('booking_start.html', resultset=datarows, lookupdata=lookupdata)
+            conn.close()
+            return render_template('booking_confirm.html', resultset=bookingdata, cardnumber=cardnumber)
         else:
             print('DB connection Error')
             return redirect(url_for('index'))

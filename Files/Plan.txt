@@ -9,6 +9,12 @@ Both Account users
   //  this page will allow the user to log out
   // this will allow the user to password update
     this will allow the user to view, update and cancel bookings
+        retrieve bookings for EMAIL of USER - seperate page
+            Ensure Select Box like Booking is included
+            Have buttons at bottom that say 'cancel' or 'edit Time' etc
+                CANCEL
+                    Delete Booking of Selection, of that Booking ID
+                
 
 After booking selection:
     Select option and payment
@@ -25,10 +31,17 @@ End user features include: Register/Login/Logout/password update, view, update, 
 
 Booking Logic
     Single OR Roundtrip
-        Single will book 1 single flight
+        //Single will book 1 single flight
         Roundtrip will book 2 flights
             BOOK 1 flight on day of departure
             BOOK 1 flight on day of return
+        CANNOT Book if flight is full
+
+        DO something, 
+            then check condition, 
+        if condition 
+            then STOP 
+        else DO something
 
     //Business is (Economy * 2)
     //Up to 3 Months in advance
