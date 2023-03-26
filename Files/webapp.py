@@ -55,19 +55,50 @@ def book_route():
 
 @app.route('/bookingview')
 def bookingView():
+
+
+    if request.method == 'POST':
+        user_id = int(request.form.get('user_id'))
+    else:
+        user_id = 1010
+
     conn = dbfunc.getConnection()
     if conn != None:  # Checking if connection is None
-        user_id = 1010
         dbcursor = conn.cursor()  # Creating cursor object
         query = "SELECT * FROM booking WHERE user_id = %s"
         dbcursor.execute(query, (user_id,))
         bookings = dbcursor.fetchall()
         dbcursor.close()
         conn.close()  # Connection must be closed
-        return render_template('bookingView.html', bookings=bookings)
+        return render_template('bookingView.html', bookings=bookings, user_id=user_id)
     else:
             print('DB connection Error')
             return 'DB Connection Error'
+    
+@app.route('/delete-booking', methods=['POST'])
+def delete_booking():
+    # Retrieve the user ID and booking ID from the form data
+    user_id = int(request.form['user_id'])
+    booking_id = int(request.form['booking_id'])
+
+    # Delete the selected booking from the database
+    conn = dbfunc.getConnection()
+    if conn != None:
+        cursor = conn.cursor()
+        query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
+        cursor.execute(query, (user_id, booking_id))
+        conn.commit()
+        cursor.close()
+        conn.close()
+        return redirect('/bookingview', code=303)
+    else:
+        print('DB connection Error')
+        return 'DB Connection Error'
+
+    
+
+    # Redirect the user back to the bookings page for their user ID
+
 
 @app.route('/returncity/', methods=['POST', 'GET'])
 def ajax_returncity():
