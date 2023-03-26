@@ -9,6 +9,29 @@
 <div class="container ps-md-0">
     <div class="row d-flex justify-content-center text-center">
       <div>		
+
+        {% if message %}
+
+            {% if alert_type == "success" %}
+                <div class="alert alert-success alert-dismissible fade show mt-4 pt-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                
+                </div>
+            {% else %}
+                <div class="alert alert-danger alert-dismissible fade show mt-4 pt-4" role="alert"> 
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+
+                </div>
+            {% endif %}
+
+            
+        {% endif %}
+
+
         <h1 class="pt-4">Here Are Your Current Bookings {{ user_id }}</h1>
             <!-- <h2>{{user}}!</h2> <br>
             <p style="color:blueviolet;"> {{message}} </p>        		 -->
@@ -58,7 +81,7 @@
             </table>
             <br>
             <input type="hidden" name="user_id" value="{{ user_id }}">
-            <input type="submit" value="Delete Booking">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this booking?')">Delete Booking</button>
           </form>
 
       </div>
@@ -68,7 +91,6 @@
 
 {% endblock %}
 
-
-{% block footer %}       
-    {{super()}}
+{% block scripts %}
+    {{ super() }}
 {% endblock %}

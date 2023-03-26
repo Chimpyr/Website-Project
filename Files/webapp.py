@@ -56,7 +56,6 @@ def book_route():
 @app.route('/bookingview')
 def bookingView():
 
-
     if request.method == 'POST':
         user_id = int(request.form.get('user_id'))
     else:
@@ -77,27 +76,38 @@ def bookingView():
     
 @app.route('/delete-booking', methods=['POST'])
 def delete_booking():
-    # Retrieve the user ID and booking ID from the form data
-    user_id = int(request.form['user_id'])
-    booking_id = int(request.form['booking_id'])
+
 
     # Delete the selected booking from the database
     conn = dbfunc.getConnection()
     if conn != None:
-        cursor = conn.cursor()
-        query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
-        cursor.execute(query, (user_id, booking_id))
-        conn.commit()
-        cursor.close()
-        conn.close()
-        return redirect('/bookingview', code=303)
+        try:
+            # Retrieve the user ID and booking ID from the form data
+            user_id = int(request.form['user_id'])
+            booking_id = int(request.form['booking_id'])
+
+            cursor = conn.cursor()
+            query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
+            cursor.execute(query, (user_id, booking_id))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            message = "Booking deleted successfully."
+            alert_type = "success"
+        except Exception as e:
+            print('DB error:', e)
+            message = "Error deleting booking: {}".format(str(e))
+            alert_type = "danger"
     else:
-        print('DB connection Error')
-        return 'DB Connection Error'
+        message = 'DB connection Error'
+        alert_type = "danger"
+    
+    return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type)
+    # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
 
     
 
-    # Redirect the user back to the bookings page for their user ID
+
 
 
 @app.route('/returncity/', methods=['POST', 'GET'])
