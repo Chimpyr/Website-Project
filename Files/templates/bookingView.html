@@ -3,6 +3,17 @@
 {% block title %}Booking View{% endblock %}
 {% block head %}
     {{super()}}
+    <script> 
+    
+      $(document).ready(function () {
+    $('#scrollTable').DataTable({
+      "scrollX": true,
+      "scrollY": 200,
+    });
+    $('.dataTables_length').addClass('bs-select');
+  });
+        
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -31,7 +42,8 @@
       <div>
 
         <form action="/delete-booking" method="POST">
-            <table class="table-responsive">
+          <div class="overflow-auto">
+            <table class="table-responsive table-striped table-sm" id="scrollTable">
               <thead>
                 <tr>
                   <th></th>
@@ -67,6 +79,7 @@
                 {% endfor %}
               </tbody>
             </table>
+          </div>
             <br>
             <input type="hidden" name="user_id" value="{{ user_id }}">
             <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this booking?')">Delete Booking</button>
