@@ -20,11 +20,11 @@
         <p>Book your next journey with us. Find the cheapest travel tickets worldwide - be it by coach, train or plane!</p>
 
         {% if optionalmessage is none %}
-        
+        <div class="m-0 p-0" style="background-color: #1f2937;">
+            <p class="alert alert-danger m-2" > {{optionalmessage}} </p>
+        </div>
         {% else %}
-            <div class="m-0 p-0" style="background-color: #1f2937;">
-                <p class="alert alert-danger m-2" > {{optionalmessage}} </p>
-            </div>
+
         {% endif %}
 
         <form action="{{ url_for('about_route') }}">

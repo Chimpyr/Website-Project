@@ -9,11 +9,15 @@ Both Account users
   //  this page will allow the user to log out
   // this will allow the user to password update
     this will allow the user to view, update and cancel bookings
-        retrieve bookings for EMAIL of USER - seperate page
-            Ensure Select Box like Booking is included
-            Have buttons at bottom that say 'cancel' or 'edit Time' etc
-                CANCEL
-                    Delete Booking of Selection, of that Booking ID
+        //retrieve bookings for EMAIL of USER - seperate page
+            //Ensure Select Box like Booking is included
+            //Have buttons at bottom that say 'cancel' or 'edit Time' etc
+               // CANCEL
+                   // Delete Booking of Selection, of that Booking ID
+            TODO: 
+                Get the Booking Cost? Should that be stored in the DB? Check that when booking all info is stored as it should, like number of child seats? and the Price?
+                Editing the booking - DO LAST as booking should have everything - wait till booking is complete FIRST
+
                 
 
 After booking selection:
@@ -25,8 +29,8 @@ After booking selection:
                 IF NOT, 
                 if not make user log in/make account
                 **didnt do this {}{} after logging in, go back to booking
-    Save booking under that users name in BOOKING table
-    print booking details as recipt on page
+    //Save booking under that users name in BOOKING table
+    //print booking details as recipt on page
 End user features include: Register/Login/Logout/password update, view, update, cancel booking
 
 Booking Logic

@@ -1,5 +1,6 @@
 use horizon_travels_test;
 use test_db;
+select * from bookings;
 
 select * from users;
 select * from booking;
