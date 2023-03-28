@@ -22,20 +22,21 @@
               <input type="hidden" name="arrivcity" id="arrivcity" value="{{lookupdata[1]}}"/>
               Outward Date : {{lookupdata[2]}} <br/>
               <input type="hidden" name="outdate" id="outdate" value="{{lookupdata[2]}}"/>
-              Return Date : {{lookupdata[3]}} <br/>
 
-            {% if isOneWay%}
-            
+
+            {% if isOneWay %}
             {% else %}
-            <input type="hidden" name="returnDate" id="returnDate" value="{{lookupdata[3]}}"/>
-            Adult Seats : {{lookupdata[4]}} <br/>
+              Return Date : {{lookupdata[3]}} <br/>
+              <input type="hidden" name="returnDate" id="returnDate" value="{{lookupdata[3]}}"/>
             {% endif %}
 
-             
+
+              Adult Seats : {{lookupdata[4]}} <br/>
               <input type="hidden" name="adultseats" id="adultseats" value="{{lookupdata[4]}}"/>
               Child Seats : {{lookupdata[5]}} <br/>
               <input type="hidden" name="childseats" id="childseats" value="{{lookupdata[5]}}"/>
-
+          
+          <h2> OneWay Flight </h2>
           <table border = 1 class="table table-striped m-3"> 
               <tr>
                   <th> Departure Time </th> <th> Arrival Time </th>  
@@ -56,6 +57,43 @@
           {% endfor %} 
           </table>  
           <br/>
+
+
+          {% if isOneWay %}
+            <h2> NOT A RETURN FLIGHT</h2>
+          {% else %}
+            <h2> Return Flight </h2>
+              <table border = 1 class="table table-striped m-3"> 
+                <tr>
+                    <th> Departure Time </th> <th> Arrival Time </th>  
+                    <th> Standard fare </th> <th> Total fare </th> 
+                    <th> Select option </th>
+                </tr>
+                
+              {% for row in resultsetRT %}
+              <tr> 
+                    <td> {{row[2]}} </td> 
+                    <td> {{row[4]}} </td> 
+                    <td> {{row[5]}} </td>              
+                    <td> {{row[6]}} </td>
+                    <input type="hidden" name="totalfare" id="totalfare" value="{{row[6]}}"/>
+                    <td> <input type="radio" name="bookingchoiceRT" value="{{row[0]}}" checked></td> 
+                </tr> 
+                
+              {% endfor %} 
+            </table>  
+            <br/>
+          {% endif %}
+
+
+
+
+
+
+
+
+
+
           <H2> Payment </H2>
             Full name on card: 
             <input type="text" name="cardname" id="cardname" /> <br/>
