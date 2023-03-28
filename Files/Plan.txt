@@ -15,7 +15,7 @@ Both Account users
                // CANCEL
                    // Delete Booking of Selection, of that Booking ID
             TODO: 
-                Get the Booking Cost? Should that be stored in the DB? Check that when booking all info is stored as it should, like number of child seats? and the Price?
+                Check that when booking all info is stored as it should, like number of child seats? and the Price?
                 Editing the booking - DO LAST as booking should have everything - wait till booking is complete FIRST
 
                 
@@ -40,12 +40,16 @@ Booking Logic
             BOOK 1 flight on day of departure
             BOOK 1 flight on day of return
         CANNOT Book if flight is full
+        CANNOT Book if day is SUNDAY
 
         DO something, 
             then check condition, 
         if condition 
             then STOP 
         else DO something
+
+        ^such as if book single flight, using that infromation
+        then if it is NotOneWay, then book another flight with the information reversed
 
     //Business is (Economy * 2)
     //Up to 3 Months in advance
