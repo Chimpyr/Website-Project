@@ -303,8 +303,6 @@ def selectBooking():
             # Convert departDate string to date object
             depart_date = datetime.strptime(
                 departDate, '%Y-%m-%d').date()
-            return_date = datetime.strptime(
-                returnDate, '%Y-%m-%d').date()
 
             today = datetime.now().date()
             # Calculate the number of days between today and the departure date
@@ -333,6 +331,10 @@ def selectBooking():
 
             today = datetime.now().date()
             # Calculate the number of days between today and the departure date
+            return_date = datetime.strptime(
+                returnDate, '%Y-%m-%d').date()
+
+
             advance_time = (return_date - today).days
 
             if advance_time >= 80:
@@ -463,72 +465,82 @@ def getUserID():
         return redirect(url_for('index'))
             
 
-@app.route('/booking_confirm/', methods=['POST', 'GET'])
-def booking_confirm():
-    if request.method == 'POST':
-        print('booking confirm initiated')
-        journeyid = request.form['bookingchoice']
-        departcity = request.form['deptcity']
-        arrivalcity = request.form['arrivcity']
-        outdate = request.form['outdate']
-        returndate = request.form['returnDate']
-        adultseats = request.form['adultseats']
-        childseats = request.form['childseats']
-        totalfare = request.form['totalfare']
-        cardnumber = request.form['cardnumber']
- 
-        
+# @app.route('/booking_confirm/', methods=['POST', 'GET'])
+# def booking_confirm():
+#     if request.method == 'POST':
+#         print('booking confirm initiated')
+#         journeyid = request.form['bookingchoice']
+#         departcity = request.form['deptcity']
+#         arrivalcity = request.form['arrivcity']
+#         outdate = request.form['outdate']
+#         adultseats = request.form['adultseats']
+#         childseats = request.form['childseats']
+#         totalfare = request.form['totalfare']
+#         cardnumber = request.form['cardnumber']
 
-        totalseats = int(adultseats) + int(childseats)
-        bookingdata = [journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare]
-
-        conn = dbfunc.getConnection()
-        if conn != None:  # Checking if connection is None
-            print('MySQL Connection is established')
-            dbcursor = conn.cursor()  # Creating cursor object
+#         if 'returnDate' in request.form:
+#             returndate = request.form['returnDate']
+#         else:
+#             returndate = None
 
 
-            # #getting the user_id to store booking with user's id
-            # userEmail = user=session['email']
-            # print("email is : " + userEmail)
-            # dbcursor.execute("SELECT user_id FROM users WHERE email = %s;", (userEmail,))
-            # userID = dbcursor.fetchone()[0] # gets the straight int value instead of tuple
-            # print("user id = " + str(userID))
+#         totalseats = int(adultseats) + int(childseats)
+#         bookingdata = [journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare]
 
-            userID = getUserID()
-
+#         conn = dbfunc.getConnection()
+#         if conn != None:  # Checking if connection is None
+#             print('MySQL Connection is established')
+#             dbcursor = conn.cursor()  # Creating cursor object
 
 
-            dbcursor.execute('SELECT LAST_INSERT_ID();')
-            rows = dbcursor.fetchone()
-            bookingid = rows[0]
-            bookingdata.append(bookingid)
+#             # #getting the user_id to store booking with user's id
+#             # userEmail = user=session['email']
+#             # print("email is : " + userEmail)
+#             # dbcursor.execute("SELECT user_id FROM users WHERE email = %s;", (userEmail,))
+#             # userID = dbcursor.fetchone()[0] # gets the straight int value instead of tuple
+#             # print("user id = " + str(userID))
 
-            dbcursor.execute('SELECT * FROM journey WHERE journey_id = %s;', (journeyid,))
-            rows = dbcursor.fetchall()
-            deptTime = rows[0][2] # corresponding column depTime
-            arrivTime = rows[0][4] # corresponding column arrivTime
-            bookingdata.append(deptTime)
-            bookingdata.append(arrivTime)
-
-            #get book date
-            today = datetime.now().date()
+#             userID = getUserID()
 
 
-            dbcursor.execute('INSERT INTO booking (start_date, end_date, journey_id, passenger_no, booking_cost, user_id, start_location, end_location, start_time, end_time, book_date) VALUES \
-                            (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);', (outdate, returndate, journeyid, totalseats, totalfare, userID, departcity, arrivalcity, deptTime, arrivTime, today,))
-            print('Booking statement executed successfully.')
-            conn.commit()
 
-            cardnumber = cardnumber[-4:-1]
-            print(cardnumber)
+#             dbcursor.execute('SELECT LAST_INSERT_ID();')
+#             rows = dbcursor.fetchone()
+#             bookingid = rows[0]
+#             bookingdata.append(bookingid)
 
-            dbcursor.close()
-            conn.close()
-            return render_template('booking_confirm.html', resultset=bookingdata, cardnumber=cardnumber)
-        else:
-            print('DB connection Error')
-            return redirect(url_for('index'))
+#             dbcursor.execute('SELECT * FROM journey WHERE journey_id = %s;', (journeyid,))
+#             rows = dbcursor.fetchall()
+#             deptTime = rows[0][2] # corresponding column depTime
+#             arrivTime = rows[0][4] # corresponding column arrivTime
+#             bookingdata.append(deptTime)
+#             bookingdata.append(arrivTime)
+
+#             #get book date
+#             today = datetime.now().date()
+
+
+#             dbcursor.execute('INSERT INTO booking (start_date, end_date, journey_id, passenger_no, booking_cost, user_id, start_location, end_location, start_time, end_time, book_date) VALUES \
+#                             (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);', (outdate, returndate, journeyid, totalseats, totalfare, userID, departcity, arrivalcity, deptTime, arrivTime, today,))
+#             print('Booking statement executed successfully.')
+#             conn.commit()
+
+
+#             # if returndate:
+#             #     # Save return journey booking to database
+#             #     dbcursor.execute('INSERT INTO booking (start_date, end_date, journey_id, passenger_no, booking_cost, user_id, start_location, end_location, start_time, end_time, book_date) VALUES \
+#             #                     (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);', (returndate, None, journeyid, totalseats, totalfare, userID, arrivalcity, departcity, deptTime, arrivTime, today,))
+#             # print('Booking statement executed successfully.')
+
+#             cardnumber = cardnumber[-4:-1]
+#             print(cardnumber)
+
+#             dbcursor.close()
+#             conn.close()
+#             return render_template('booking_confirm.html', resultset=bookingdata, cardnumber=cardnumber)
+#         else:
+#             print('DB connection Error')
+#             return redirect(url_for('index'))
 
 
 
