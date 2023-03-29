@@ -321,6 +321,7 @@ def selectBooking():
 
         if not isOneWay:
 
+            RTdata = [] # initialize RTdata with an empty list
             for row in RTrows:
                 RTdata = list(row)
                 fare = (float(row[5]) * float(adultseats)) + \
@@ -343,8 +344,9 @@ def selectBooking():
                 fare = fare * 0.9
             elif advance_time >= 45:
                 fare = fare * 0.95
-
+                
             RTdata.append(fare)
+
             RTdatarows.append(RTdata)
             print('rt data rows vvv')
             print(RTdatarows)
@@ -542,6 +544,102 @@ def getUserID():
 #             print('DB connection Error')
 #             return redirect(url_for('index'))
 
+
+@app.route('/booking_confirm/', methods=['POST', 'GET'])
+def booking_confirm():
+    if request.method == 'POST':
+        print('booking confirm initiated')
+        outbound_journeyid = request.form['outbound_bookingchoice']
+        departcity = request.form['deptcity']
+        arrivalcity = request.form['arrivcity']
+        outdate = request.form['outdate']
+        
+        adultseats = request.form['adultseats']
+        childseats = request.form['childseats']
+        outbound_totalfare = request.form['outbound_totalfare']
+        cardnumber = request.form['cardnumber']
+
+        if 'returnDate' in request.form:
+            returndate = request.form['returnDate']
+            return_journeyid = request.form['return_bookingchoice']
+            return_totalfare = request.form['return_totalfare']
+            return_bookingdata = [return_journeyid, departcity, arrivalcity, outdate, adultseats, childseats, return_totalfare]
+        else:
+            return_journeyid = None
+            return_departcity = None
+            return_arrivalcity = None
+            return_outdate = None
+            return_adultseats = None
+            return_childseats = None
+            return_totalfare = None
+            return_cardnumber = None
+
+        totalseats = int(adultseats) + int(childseats)
+        outbound_bookingdata = [outbound_journeyid, departcity, arrivalcity, outdate, adultseats, childseats, outbound_totalfare]
+
+        
+
+        conn = dbfunc.getConnection()
+        if conn != None:  # Checking if connection is None
+            print('MySQL Connection is established')
+            dbcursor = conn.cursor()  # Creating cursor object
+
+            #get user id
+            userID = getUserID()
+
+            dbcursor.execute('SELECT LAST_INSERT_ID();')
+            rows = dbcursor.fetchone()
+            outbound_bookingid = rows[0]
+            outbound_bookingdata.append(outbound_bookingid)
+
+            if return_journeyid:
+                dbcursor.execute('SELECT LAST_INSERT_ID();')
+                rows = dbcursor.fetchone()
+                return_bookingid = rows[0]
+                return_bookingdata.append(return_bookingid)
+
+            dbcursor.execute('SELECT * FROM journey WHERE journey_id = %s;', (outbound_journeyid,))
+            rows = dbcursor.fetchall()
+            outbound_deptTime = rows[0][2] # corresponding column depTime
+            outbound_arrivTime = rows[0][4] # corresponding column arrivTime
+            outbound_bookingdata.append(outbound_deptTime)
+            outbound_bookingdata.append(outbound_arrivTime)
+
+            if return_journeyid:
+                dbcursor.execute('SELECT * FROM journey WHERE journey_id = %s;', (return_journeyid,))
+                rows = dbcursor.fetchall()
+                return_deptTime = rows[0][2] # corresponding column depTime
+                return_arrivTime = rows[0][4] # corresponding column arrivTime
+                return_bookingdata.append(return_deptTime)
+                return_bookingdata.append(return_arrivTime)
+
+
+            #get book date
+            today = datetime.now().date()
+
+
+            # Insert outbound booking data into database
+            dbcursor.execute('INSERT INTO booking(user_id, journey_id, start_date, start_location, end_location, start_time, end_time, book_date, passenger_no, booking_cost) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);', (userID, outbound_journeyid, outdate, departcity, arrivalcity, outbound_deptTime, outbound_arrivTime, today, totalseats, outbound_totalfare))
+            conn.commit()
+
+            if return_journeyid:
+                dbcursor.execute('INSERT INTO booking(user_id, journey_id, start_date, start_location, end_location, start_time, end_time, book_date, passenger_no, booking_cost) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);', (userID, return_journeyid, returndate, arrivalcity, departcity, return_deptTime, return_arrivTime, today, totalseats, return_totalfare))
+                conn.commit()
+            
+            
+
+
+            print('Booking Confirmed')
+
+            cardnumber = cardnumber[-4:-1]
+            print(cardnumber)
+
+            dbcursor.close()
+            conn.close()
+            return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber)
+        else:
+            print('DB connection Error')
+            return redirect(url_for('index'))
 
 
 @app.route('/changePassword', methods=['POST', 'GET'])
