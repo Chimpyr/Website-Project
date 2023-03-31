@@ -1,14 +1,85 @@
+
 {% extends "baseHTML.html" %}
 
-{% block title %}Book - Confirmation{% endblock %}
-
-
-{% block content %}
-  <h1>This is start of the basic booking process</h1> 
-  <!--[journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare, bookingid, deptTime, arrivTime]-->
+  {% block title %}Book - Confirmation{% endblock %}
   
-  <a href="/">Go to Home Page</a>
-  </p>
- {% endblock %}
+  {% block content %}
+  <div class="container ps-md-0">
+      <h1>Booking Complete</h1> 
+      <div class="row">
+        <div class="col-md-6">
+          <h3>Outbound Booking Data</h3>
+          <p>
+            <strong>outbound_bookingchoice:</strong> {{outbound_bookingdata[0]}}<br>
+            <strong>Department City:</strong> {{outbound_bookingdata[1]}}<br>
+            <strong>Arrival City:</strong> {{outbound_bookingdata[2]}}<br>
+            <strong>Out Date:</strong> {{outbound_bookingdata[3]}}<br>
+            <strong>Adult Seats:</strong> {{outbound_bookingdata[4]}}<br>
+            <strong>Child Seats:</strong> {{outbound_bookingdata[5]}}<br>
+            <strong>Outbound Fare:</strong> {{outbound_bookingdata[6]}}<br>
+            <strong>Outbound Department Time:</strong> {{outbound_bookingdata[8]}}<br>
+            <strong>Outbound Arrival Time:</strong> {{outbound_bookingdata[9]}}<br>
+          </p>
+        </div>
+      
+        {% if not isOneWay %}
+        <div class="col-md-6">
+          <h3>Return Booking Data</h3>
+          <p>
+            <strong>return_bookingchoice:</strong> {{return_bookingdata[0]}}<br>
+            <strong>Department City:</strong> {{return_bookingdata[1]}}<br>
+            <strong>Arrival City:</strong> {{return_bookingdata[2]}}<br>
+            <strong>Return Date:</strong> {{returnDate}}<br>
+            <strong>Adult Seats:</strong> {{return_bookingdata[4]}}<br>
+            <strong>Child Seats:</strong> {{return_bookingdata[5]}}<br>
+            <strong>Return Fare:</strong> {{return_bookingdata[6]}}<br>
+            <strong>Return Department Time:</strong> {{return_bookingdata[8]}}<br>
+            <strong>Return Arrival Time:</strong> {{return_bookingdata[9]}}<br>
+          </p>
+        </div>
+        {% endif %}
+      </div>
+      
+          <br/>
+          <strong>Total Fare:</strong> {{ outbound_bookingdata[6]|int + return_bookingdata[6]|int }}<br/>
+          <br/>
+          Payment: Card ending with ****** {{cardnumber}} <br/>
+    
+        <input type="hidden" name="bookingid" value="{{outbound_bookingdata[8]}}" />   
+        <input type="submit" value="Proceed to further actions - to dumpsVar" class="btn btn-secondary mt-4" /> 
+      </form>  
+
+    
 
 
+    <!--[journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare, bookingid, deptTime, arrivTime]-->
+
+      <!-- Booking ID: {{outbound_bookingdata[8]}} <br/>
+      Departure City : {{outbound_bookingdata[1]}} <br/>
+      Departure Date : {{outbound_bookingdata[3]}} <br/>
+      Departure Time : {{outbound_bookingdata[9]}} <br/>
+      Arrival City : {{outbound_bookingdata[2]}} <br/>  
+      Arrival Time : {{outbound_bookingdata[10]}} <br/>
+  
+      {% if not isOneWay %}
+        Return Date: {{returnDate}} <br/>
+        Total Fare : {{ outbound_bookingdata[6]|int + return_bookingdata[6]|int }}<br/>
+        <input type="hidden" name="totalfare" value="{{outbound_bookingdata[6] + return_bookingdata[6]}}" /> 
+      {% else %}
+        Total Fare: {{ outbound_bookingdata[6] }} <br/>
+        <input type="hidden" name="totalfare" value="{{outbound_bookingdata[6]}}" /> 
+      {% endif %}
+    
+  
+      Adult Seats : {{outbound_bookingdata[5]}} <br/>
+      Child Seats : {{outbound_bookingdata[6]}} <br/> -->
+  
+
+
+
+    <br/>
+    <a href="/" class="btn btn-primary mt-4">Go to Home Page</a>
+
+    </div>
+  </div>
+  {% endblock %}

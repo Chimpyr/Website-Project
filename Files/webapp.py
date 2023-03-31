@@ -5,6 +5,8 @@ from datetime import datetime
 from passlib.hash import sha256_crypt
 import hashlib
 import gc
+import requests
+import json
 from functools import wraps
 app = Flask(__name__)
 app.secret_key = 'suchSecret'  # secret key for sessions
@@ -548,6 +550,7 @@ def getUserID():
 @app.route('/booking_confirm/', methods=['POST', 'GET'])
 def booking_confirm():
     if request.method == 'POST':
+        isOneWay = True
         print('booking confirm initiated')
         outbound_journeyid = request.form['outbound_bookingchoice']
         departcity = request.form['deptcity']
@@ -564,6 +567,7 @@ def booking_confirm():
             return_journeyid = request.form['return_bookingchoice']
             return_totalfare = request.form['return_totalfare']
             return_bookingdata = [return_journeyid, departcity, arrivalcity, outdate, adultseats, childseats, return_totalfare]
+            isOneWay = False
         else:
             return_journeyid = None
             return_departcity = None
@@ -636,10 +640,29 @@ def booking_confirm():
 
             dbcursor.close()
             conn.close()
-            return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber)
+
+            your_route_handler()
+
+
+            payload = request.form.to_dict()
+            print(payload)
+
+
+            return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber, isOneWay=isOneWay, returnDate=payload['returnDate'])
         else:
             print('DB connection Error')
             return redirect(url_for('index'))
+
+def your_route_handler():
+    if request.method == 'POST':
+            try:
+                payload = request.json
+                print('Payload:', payload)
+                return 'Success'
+            except:
+                return 'Error'
+    else:
+            return 'Invalid request method'
 
 
 @app.route('/changePassword', methods=['POST', 'GET'])
