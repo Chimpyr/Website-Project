@@ -10,11 +10,7 @@
     crossorigin="anonymous">
   </script>
     <script src="{{ url_for ('static', filename ='scripts/bookScript.js')}}" defer></script> 
-  <script>
 
-   
-  
-  </script>
     <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/booking.css')}}">
 {% endblock %}
 
@@ -28,16 +24,16 @@
             <div class="form-group">
               <span class="form-label">Travel Method</span>
               <div class="form-checkbox mb-3">
-                <label for="coach">
-                  <input type="radio" id="coach" name="trip-type" />
+                <label for="coach" style="color: rgb(150, 149, 149);">
+                  <input type="radio" id="coach" name="trip-type" disabled/>
                   <span></span>Coach
                 </label>
-                <label for="train">
-                  <input type="radio" id="train" name="trip-type" />
+                <label for="train" style="color: rgb(150, 149, 149);">
+                  <input type="radio" id="train" name="trip-type"disabled />
                   <span></span>Train
                 </label>
                 <label for="plane">
-                  <input type="radio" id="plane" name="trip-type" />
+                  <input type="radio" id="plane" name="trip-type" checked/>
                   <span></span>Plane
                 </label>
               </div>

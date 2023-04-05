@@ -8,9 +8,9 @@
       <h1>Booking Complete</h1> 
       <div class="row">
         <div class="col-md-6">
-          <h3>Outbound Booking Data</h3>
+          <h4>Outbound Booking Data</h4>
           <p>
-            <strong>outbound_bookingchoice:</strong> {{outbound_bookingdata[0]}}<br>
+            <!-- <strong>outbound_bookingchoice:</strong> {{outbound_bookingdata[0]}}<br> -->
             <strong>Department City:</strong> {{outbound_bookingdata[1]}}<br>
             <strong>Arrival City:</strong> {{outbound_bookingdata[2]}}<br>
             <strong>Out Date:</strong> {{outbound_bookingdata[3]}}<br>
@@ -24,9 +24,9 @@
       
         {% if not isOneWay %}
         <div class="col-md-6">
-          <h3>Return Booking Data</h3>
+          <h4>Return Booking Data</h4>
           <p>
-            <strong>return_bookingchoice:</strong> {{return_bookingdata[0]}}<br>
+            <!-- <strong>return_bookingchoice:</strong> {{return_bookingdata[0]}}<br> -->
             <strong>Department City:</strong> {{return_bookingdata[1]}}<br>
             <strong>Arrival City:</strong> {{return_bookingdata[2]}}<br>
             <strong>Return Date:</strong> {{returnDate}}<br>
@@ -41,7 +41,11 @@
       </div>
       
           <br/>
-          <strong>Total Fare:</strong> {{ outbound_bookingdata[6]|int + return_bookingdata[6]|int }}<br/>
+          {% if not isOneWay %}
+            <strong>Total Fare:</strong> {{ outbound_bookingdata[6]|int + return_bookingdata[6]|int }}<br/>
+          {% else %}
+            <strong>Total Fare:</strong> {{ outbound_bookingdata[6] }}<br/>
+          {% endif %}
           <br/>
           Payment: Card ending with ****** {{cardnumber}} <br/>
     

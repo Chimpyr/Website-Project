@@ -78,6 +78,8 @@ def bookingView():
             print('DB connection Error')
             return 'DB Connection Error'
     
+
+    
 @app.route('/delete-booking', methods=['POST'])
 def delete_booking():
     #This one is self explanatory, it deletes the booking from the database
@@ -86,17 +88,31 @@ def delete_booking():
     conn = dbfunc.getConnection()
     if conn != None:
         try:
-            # Retrieve the user ID and booking ID from the form data
+            # Retrieve the user ID and booking details from the form data
             user_id = int(request.form['user_id'])
             booking_id = int(request.form['booking_id'])
+            date = request.form['date']
+            print(date)
+            fare = request.form['fare']
+            print(fare)
 
+            # Calculate the cancellation period
+            days_before_booking = (datetime.strptime(date, '%Y-%m-%d') - datetime.now()).days
+            if days_before_booking >= 60:
+                cancellation_charge = 0
+            elif days_before_booking >= 30:
+                cancellation_charge = 0.5 * float(fare)
+            else:
+                cancellation_charge = float(fare)
+
+            # Delete the booking from the database
             cursor = conn.cursor()
             query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
             cursor.execute(query, (user_id, booking_id))
             conn.commit()
             cursor.close()
             conn.close()
-            message = "Booking deleted successfully."
+            message = f"Booking Cancelled successfully. Cancellation charge: {cancellation_charge:.2f}."
             alert_type = "success"
         except Exception as e:
             print('DB error:', e)
@@ -108,6 +124,7 @@ def delete_booking():
     
     return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type)
     # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
+
 
     
 
@@ -172,6 +189,8 @@ def login_route():
                                 # set session variables
                                 session['logged_in'] = True
                                 session['email'] = request.form['email']
+                                # fake user name to be used in the welcome messages
+                                session['username'] = email.split('@')[0]
                                 session['usertype'] = str(data[1])
                                 if (session['usertype'] == 'admin'):
                                     return render_template('adminuser.html',
@@ -577,6 +596,7 @@ def booking_confirm():
             return_childseats = None
             return_totalfare = None
             return_cardnumber = None
+            return_bookingdata = None
 
         totalseats = int(adultseats) + int(childseats)
         outbound_bookingdata = [outbound_journeyid, departcity, arrivalcity, outdate, adultseats, childseats, outbound_totalfare]
@@ -626,10 +646,16 @@ def booking_confirm():
             dbcursor.execute('INSERT INTO booking(user_id, journey_id, start_date, start_location, end_location, start_time, end_time, book_date, passenger_no, booking_cost) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);', (userID, outbound_journeyid, outdate, departcity, arrivalcity, outbound_deptTime, outbound_arrivTime, today, totalseats, outbound_totalfare))
             conn.commit()
 
+            payload = request.form.to_dict()
+            print(payload)
+            
+
             if return_journeyid:
                 dbcursor.execute('INSERT INTO booking(user_id, journey_id, start_date, start_location, end_location, start_time, end_time, book_date, passenger_no, booking_cost) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);', (userID, return_journeyid, returndate, arrivalcity, departcity, return_deptTime, return_arrivTime, today, totalseats, return_totalfare))
                 conn.commit()
-            
+                returnDate = payload['returnDate']
+            else:
+                returnDate = None
             
 
 
@@ -644,11 +670,9 @@ def booking_confirm():
             your_route_handler()
 
 
-            payload = request.form.to_dict()
-            print(payload)
+           
 
-
-            return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber, isOneWay=isOneWay, returnDate=payload['returnDate'])
+            return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber, isOneWay=isOneWay, returnDate=returnDate)
         else:
             print('DB connection Error')
             return redirect(url_for('index'))

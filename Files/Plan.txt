@@ -15,8 +15,9 @@ Both Account users
                // CANCEL
                    // Delete Booking of Selection, of that Booking ID
             TODO: 
-                Check that when booking all info is stored as it should, like number of child seats? and the Price?
+                //Check that when booking all info is stored as it should, like number of child seats? and the Price?
                 Editing the booking - DO LAST as booking should have everything - wait till booking is complete FIRST
+                //Input Login/Register Validation
 
                 
 
@@ -36,9 +37,9 @@ End user features include: Register/Login/Logout/password update, view, update, 
 Booking Logic
     Single OR Roundtrip
         //Single will book 1 single flight
-        Roundtrip will book 2 flights
-            BOOK 1 flight on day of departure
-            BOOK 1 flight on day of return
+        //Roundtrip will book 2 flights
+        //    BOOK 1 flight on day of departure
+        //    BOOK 1 flight on day of return
         CANNOT Book if flight is full
         CANNOT Book if day is SUNDAY
 

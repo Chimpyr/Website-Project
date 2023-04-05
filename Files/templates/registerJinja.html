@@ -4,6 +4,9 @@
 {% block head %}
     {{super()}}
     <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/login.css')}}">
+    
+    <script defer src="{{ url_for('static', filename='scripts/registerScript.js') }}"></script>
+
 {% endblock %}
 
 {% block content %}
@@ -18,9 +21,9 @@
             <div class="col-md-9 col-lg-8 mx-auto">
               <h3 class="login-heading mb-4 fw-semibold">Glad you're joining us!</h3>
 
-              <p style="color:brown;">{{error}}</p>
+              <p style="color:brown;" id="error">{{error}}</p>
               <!-- Sign In Form -->
-              <form action="/register" method="post">
+              <form action="/register" method="post" name="registerForm">
                 <div class="form-floating mb-3">
                   <input type="text" class="form-control" id="floatingInput" placeholder="John" name="firstName" value="{{request.form.firstName}}">
                   <label for="floatingInput">First Name</label>
