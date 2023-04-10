@@ -18,6 +18,22 @@
 <div id="booking" class="section bg-image" style="background-image: url('https://images.unsplash.com/photo-1524047934617-cb782c24e5f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80');">
   <div class="section-center">
     <div class="container">
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+
+
+    
+
       <div class="row">
         <div class="booking-form">
           <form action="/selectBooking/" id="flightForm" method="POST">
@@ -40,7 +56,7 @@
               <div class="form-checkbox">
                 <span class="form-label">Travel Type</span>
                 <label for="roundtrip">
-                  <input type="radio" name="travelType" id="roundtrip" value="roundtrip" onclick="checkTravelType()" />
+                  <input type="radio" name="travelType" id="roundtrip" value="roundtrip"  checked onclick="checkTravelType()" />
                   <span></span>Roundtrip
                 </label>
                 <label for="one-way">

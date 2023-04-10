@@ -275,6 +275,8 @@ def selectBooking():
         travelClass = request.form['travelClass']
         travelType = request.form['travelType']
 
+        passenger_count = int(adultseats) + int(childseats)
+        print('passenger count: ' + str(passenger_count))
 
         try:
             returnDate = request.form['returnDate']
@@ -298,6 +300,8 @@ def selectBooking():
         dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;',
                                  (departLocation, arrivalLocation))
         OWrows = dbcursor.fetchall()
+        journey_id = OWrows[0][0] #get the journey ID
+
 
         # if it is a return trip, get the return trip data, this includes flights going back
         if not isOneWay:
@@ -305,84 +309,135 @@ def selectBooking():
             dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;',
                                  (arrivalLocation, departLocation))
             RTrows = dbcursor.fetchall()
-
-            
-        datarows = []
-        RTdatarows = []
-
-        for row in OWrows:
-            data = list(row)
-            fare = (float(row[5]) * float(adultseats)) + \
-                (float(row[5]) * 0.5 * float(childseats))
-
-            if travelClass == 'Business class':
-                fare = fare * 2
-
-                
-            
-            # #going to only base it off the depart date in all cases for now
-            # advance_time = (depart_date - today).days
-
-            departDate = request.form['departDate']
-            # Convert departDate string to date object
-            depart_date = datetime.strptime(
-                departDate, '%Y-%m-%d').date()
-
-            today = datetime.now().date()
-            # Calculate the number of days between today and the departure date
-            advance_time = (depart_date - today).days
-
-            if advance_time >= 80:
-                fare = fare * 0.8
-            elif advance_time >= 60:
-                fare = fare * 0.9
-            elif advance_time >= 45:
-                fare = fare * 0.95
-
-            data.append(fare)
-            datarows.append(data)
+            return_journey_id = RTrows[0][0] #get the return journey ID
 
 
+        # check that flight is full
+        # if flight is full give an error message
+        capacity = 120 # this is the capacity of the plane
+
+        # query to get the number of existing bookings on the flight for that date and specific journey
+        # checks the first flight (one way, departure flight)
+        dbcursor.execute("SELECT SUM(passenger_no) FROM booking WHERE journey_id = %s AND start_date = %s", (journey_id, departDate,))
+        existing_bookings = dbcursor.fetchone()[0]
         if not isOneWay:
+            # checks the second flight (return flight)
+            dbcursor.execute("SELECT SUM(passenger_no) FROM booking WHERE journey_id = %s AND start_date = %s", (return_journey_id, returnDate,))
+            existing_return_bookings = dbcursor.fetchone()[0]
+            if existing_return_bookings is None:
+                existing_return_bookings = 0
+            print("return existing_bookings")
+            print(existing_return_bookings)
+            return_available_seats = capacity - existing_return_bookings - passenger_count
+            print("return_available_seats")
+            print(return_available_seats)
 
-            RTdata = [] # initialize RTdata with an empty list
-            for row in RTrows:
-                RTdata = list(row)
+            
+
+
+
+        if existing_bookings is None:
+            existing_bookings = 0
+        print("existing_bookings")
+        print(existing_bookings)
+        
+        
+        # Calculate the number of available seats on the flight
+        available_seats = capacity - existing_bookings - passenger_count
+        print("available_seats")
+        print(available_seats)
+        
+        # Check if there are enough available seats for the booking
+        if available_seats >= 0:
+            print("flight where depart available_seats >= 0")
+            if not isOneWay:
+                print("return flight where depart available_seats >= 0")
+                if return_available_seats < 0: #if there are NOT enough seats on the return flight the num is < 0
+                    print("return flight where depart available_seats >= 0 AND return_available_seats < 0")
+                    flash('Sorry, there are not enough available seats for your return booking. Please try again with a lower number of passengers.')
+                    return redirect('/book')
+
+
+            datarows = []
+            RTdatarows = []
+
+            for row in OWrows:
+                data = list(row)
                 fare = (float(row[5]) * float(adultseats)) + \
                     (float(row[5]) * 0.5 * float(childseats))
 
-            if travelClass == 'Business class':
-                fare = fare * 2
+                if travelClass == 'Business class':
+                    fare = fare * 2
 
-            today = datetime.now().date()
-            # Calculate the number of days between today and the departure date
-            return_date = datetime.strptime(
-                returnDate, '%Y-%m-%d').date()
-
-
-            advance_time = (return_date - today).days
-
-            if advance_time >= 80:
-                fare = fare * 0.8
-            elif advance_time >= 60:
-                fare = fare * 0.9
-            elif advance_time >= 45:
-                fare = fare * 0.95
+                    
                 
-            RTdata.append(fare)
+                # #going to only base it off the depart date in all cases for now
+                # advance_time = (depart_date - today).days
 
-            RTdatarows.append(RTdata)
-            print('rt data rows vvv')
-            print(RTdatarows)
+                departDate = request.form['departDate']
+                # Convert departDate string to date object
+                depart_date = datetime.strptime(
+                    departDate, '%Y-%m-%d').date()
+
+                today = datetime.now().date()
+                # Calculate the number of days between today and the departure date
+                advance_time = (depart_date - today).days
+
+                if advance_time >= 80:
+                    fare = fare * 0.8
+                elif advance_time >= 60:
+                    fare = fare * 0.9
+                elif advance_time >= 45:
+                    fare = fare * 0.95
+
+                data.append(fare)
+                datarows.append(data)
+
+
+            if not isOneWay:
+
+                RTdata = [] # initialize RTdata with an empty list
+                for row in RTrows:
+                    RTdata = list(row)
+                    fare = (float(row[5]) * float(adultseats)) + \
+                        (float(row[5]) * 0.5 * float(childseats))
+
+                if travelClass == 'Business class':
+                    fare = fare * 2
+
+                today = datetime.now().date()
+                # Calculate the number of days between today and the departure date
+                return_date = datetime.strptime(
+                    returnDate, '%Y-%m-%d').date()
+
+
+                advance_time = (return_date - today).days
+
+                if advance_time >= 80:
+                    fare = fare * 0.8
+                elif advance_time >= 60:
+                    fare = fare * 0.9
+                elif advance_time >= 45:
+                    fare = fare * 0.95
+                    
+                RTdata.append(fare)
+
+                RTdatarows.append(RTdata)
+                print('rt data rows vvv')
+                print(RTdatarows)
+            else:
+                RTdatarows = None
+                print('else(oneWay) rt data rows vvv')
+                print(RTdatarows)
+
+            dbcursor.close()
+            conn.close()
+
+            return render_template('booking_start.html', resultset=datarows, resultsetRT=RTdatarows, lookupdata=lookupdata, isOneWay=isOneWay)    
         else:
-            RTdatarows = None
-            print('else(oneWay) rt data rows vvv')
-            print(RTdatarows)
-
-        dbcursor.close()
-        conn.close()
-
-        return render_template('booking_start.html', resultset=datarows, resultsetRT=RTdatarows, lookupdata=lookupdata, isOneWay=isOneWay)
+            print("return flight where depart available_seats is < 0 (not enough seats)")
+            flash('Sorry, there are not enough available seats for your departure booking. Please try again with a lower number of passengers.')
+            return redirect('/book')
     else:
         print('DB connection Error')
         return redirect(url_for('index'))
