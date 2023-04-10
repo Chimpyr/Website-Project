@@ -41,7 +41,7 @@ Booking Logic
         //    BOOK 1 flight on day of departure
         //    BOOK 1 flight on day of return
         CANNOT Book if flight is full
-        CANNOT Book if day is SUNDAY
+        //CANNOT Book if day is SUNDAY
 
         DO something, 
             then check condition, 
