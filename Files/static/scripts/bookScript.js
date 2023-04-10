@@ -116,3 +116,42 @@ function checkTravelType() {
      req.send(); 
      return false;
  }
+
+
+// THIS PART OF THE CODE ENSURES THAT THE USER CANNOT SELECT A SUNDAY AS A DEPARTURE OR RETURN DATE (AIR TRAVEL IS NOT ALLOWED ON SUNDAYS)
+
+// Get the form and the depart and return date input fields
+const form = document.getElementById("flightForm");
+const departDateInput = document.getElementById("departDate");
+const returnDateInput = document.getElementById("returnDate");
+
+// Function to check if a date is a Sunday
+function isSunday(date) {
+  return date.getDay() === 0;
+}
+
+// Function to handle form submission
+function handleSubmit(event) {
+  // Prevent the default form submission behavior
+  event.preventDefault();
+
+  // Check if departDate is on a Sunday
+  if (isSunday(new Date(departDateInput.value))) {
+    // Display an alert
+    alert("Departure date cannot be on a Sunday");
+    return;
+  }
+
+  // Check if returnDate is on a Sunday (if it's not a one-way flight)
+  if (returnDateInput.value && isSunday(new Date(returnDateInput.value))) {
+    // Display an alert
+    alert("Return date cannot be on a Sunday");
+    return;
+  }
+
+  // If we got this far, the dates are valid, so submit the form
+  form.submit();
+}
+
+// Add an event listener for form submission
+form.addEventListener("submit", handleSubmit);

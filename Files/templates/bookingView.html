@@ -3,10 +3,23 @@
 {% block title %}Booking View{% endblock %}
 {% block head %}
     {{super()}}
-    <script> 
-    
-        
-    </script>
+    <script>
+      function validateBookingSelection() {
+          var booking_id = document.querySelector('input[name="booking_id"]:checked');
+          if (!booking_id) {
+              alert("Please select a booking to cancel.");
+              return false;
+          }
+          return true;
+      }
+  
+      document.querySelector("#cancel-booking-form").addEventListener("submit", function(event) {
+          if (!validateBookingSelection()) {
+              event.preventDefault();
+          }
+      });
+  </script>
+  
 {% endblock %}
 
 {% block content %}
@@ -34,15 +47,15 @@
       </div>
       <div>
 
-        <form action="/delete-booking" method="POST">
+        <form id="cancel-booking-form" method="POST">
           <div class="overflow-auto">
-            <table class="table-responsive table-striped table-sm" id="scrollTable">
+            <table class="table-responsive table-striped table-sm mx-auto" id="scrollTable">
               <thead>
                 <tr>
                   <th></th>
-                  <th>Booking ID</th>
+                  <!-- <th>Selected</th> -->
                   <th>Start Date</th>
-                  <th>End Date</th>
+                  <!-- <th>End Date</th> -->
                   <th>Start Location</th>
                   <th>End Location</th>
                   <th>Start Time</th>
@@ -57,9 +70,9 @@
                 {% for booking in bookings %}
                 <tr>
                   <td><input type="radio" name="booking_id" value="{{ booking[0] }}"></td>
-                  <td >{{ booking[0] }}</td>
+                  <!-- <td >{{ booking[0] }}</td> -->
                   <td>{{ booking[3] }}</td>
-                  <td>{{ booking[4] }}</td>
+                  <!-- <td>{{ booking[4] }}</td> -->
                   <td>{{ booking[5] }}</td>
                   <td>{{ booking[6] }}</td>
                   <td>{{ booking[7] }}</td>
@@ -75,11 +88,12 @@
               </tbody>
             </table>
           </div>
-            <br>
-            <input type="hidden" name="user_id" value="{{ user_id }}">
-            <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to Cancel this booking? There may be a charge.')">Cancel Booking</button>
-          </form>
-
+          <br>
+          <input type="hidden" name="user_id" value="{{ user_id }}">
+          <button type="submit" class="btn btn-danger" name="delete" onclick="return confirm('Are you sure you want to Cancel this booking? There may be a charge.')">Cancel Booking</button>
+          <a class="btn btn-primary ms-2" href="/edit-booking" role="button">Edit Booking</a>
+        </form>
+        
       </div>
 
     </div>

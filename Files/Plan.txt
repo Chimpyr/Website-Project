@@ -59,10 +59,11 @@ Booking Logic
     //    Between 60 and 79 days - 10%
     //    Between 45 and 59 days - 5%
     //    Under 45 days No discount
-    Cancellations
-        Before 60 days - no charges
-        Between 30 to 60 days - 50% charge
-        Within 30 days - 100% charge. 
+    //Cancellations
+    //    Before 60 days - no charges
+    //    Between 30 to 60 days - 50% charge
+    //    Within 30 days - 100% charge. 
+    QUESTION: WHAT TO DO WITH CANCELLATIONS? CURRENTLY only giving message
 
 
 
@@ -71,8 +72,31 @@ Admin user perspective and features include:
 //    1. Admin should be able to Login/Logout and update password
     2. Admin should be able to perform following tasks: Adding/updating/removing journeys or
     prices constraints or end user deails
+
+    JOURNEY EDITOR:
+        Update
+        Remove
+        PRICE constraints
+    USER EDITOR:
+        Add
+        Update
+        Remove
+
+    for editing database entries v v v
+        https://python-adv-web-apps.readthedocs.io/en/latest/flask_db3.html
+    Notes:
+        Put ID in route (admin only) such as '/update/<int:id>'
+            For users check that their session ID matches the ID in the route
+            OR use a form to get the ID (such as from the View booking page, get ID from hidden element or SELECTION?)
+        >Then use that ID to get the data from the database
+        Then use that data to populate the form
+        Then use that form to update the database
+        Then redirect to the main page
+
     3. Admin should be able to generate admin reports e.g., monthly sales, sales for each
     journey, top customers etc.
+
+    4. Showing comparison of bookings in all or selected journeys, 
 
 
 
