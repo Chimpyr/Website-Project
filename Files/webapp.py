@@ -68,8 +68,16 @@ def bookingView():
     conn = dbfunc.getConnection()
     if conn != None:  # Checking if connection is None
         dbcursor = conn.cursor()  # Creating cursor object
-        query = "SELECT * FROM booking WHERE user_id = %s"
-        dbcursor.execute(query, (user_id,))
+        #check if user id admin
+        #if admin then show all bookings
+        #else show only the users bookings
+        if session['usertype'] == 'admin':
+            query = "SELECT * FROM booking"
+            dbcursor.execute(query)
+        else:
+            query = "SELECT * FROM booking WHERE user_id = %s"
+            dbcursor.execute(query, (user_id,))
+        
         bookings = dbcursor.fetchall()
         dbcursor.close()
         conn.close()  # Connection must be closed
@@ -302,13 +310,20 @@ def selectBooking():
         OWrows = dbcursor.fetchall()
         journey_id = OWrows[0][0] #get the journey ID
 
-
+        # THIS IS BROKEN - WHEN LDN TO MAN it breaks?
         # if it is a return trip, get the return trip data, this includes flights going back
         if not isOneWay:
             #flipped to do the opposite direction
+            print
             dbcursor.execute('SELECT * FROM journey WHERE department_location = %s AND arrival_location = %s;',
                                  (arrivalLocation, departLocation))
             RTrows = dbcursor.fetchall()
+            print("RTrows")
+            print(RTrows)
+            if RTrows == []:
+                print("RT rows empty")
+                flash('Sorry, currently there are currently no return flights from ' + arrivalLocation + ' to ' + departLocation + '. Please try again.')
+                return redirect('/book')
             return_journey_id = RTrows[0][0] #get the return journey ID
 
 

@@ -43,7 +43,16 @@
             {% endif %}
         {% endif %}
 
-        <h1 class="pt-4">Here Are Your Current Bookings {{session['username']}}</h1>   
+
+        {% if session['usertype'] == 'admin' %}
+        <h1 class="pt-4">Admin Booking Editor</h1>
+        {% elif session['usertype'] == 'standard' %}
+        <h1 class="pt-4">Here Are Your Current Bookings {{session['username']}}</h1> 
+        {% else %}
+        
+        {% endif %}
+
+         
       </div>
       <div>
 
