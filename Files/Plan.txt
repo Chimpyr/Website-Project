@@ -93,9 +93,11 @@ Admin user perspective and features include:
         Then use that form to update the database
         Then redirect to the main page
 
-    3. Admin should be able to generate admin reports e.g., monthly sales, sales for each
-    journey, top customers etc.
-    
+    3. Admin should be able to generate admin reports e.g.,
+     //monthly sales, 
+     //sales for each journey, 
+    //top customers etc.
+
 
     4. Showing comparison of bookings in all or selected journeys, 
 
