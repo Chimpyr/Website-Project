@@ -121,7 +121,7 @@ def delete_booking():
             # Delete the booking from the database
             cursor = conn.cursor()
             query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
-            #cursor.execute(query, (user_id, booking_id))
+            cursor.execute(query, (user_id, booking_id))
             conn.commit()
             cursor.close()
             conn.close()
@@ -141,19 +141,19 @@ def delete_booking():
     # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
 
 
-@app.route('/edit_booking/<string:id>/', methods=['GET', 'POST'])
-def edit_booking(id):
-    conn = dbfunc.getConnection()
-    if conn != None:
-        try:
-           pass
-        except Exception as e:
-            print('DB error:', e)
-            message = "Error deleting booking: {}".format(str(e))
-    else:
-        message = 'DB connection Error'
+# @app.route('/edit_booking/<string:id>/', methods=['GET', 'POST'])
+# def edit_booking(id):
+#     conn = dbfunc.getConnection()
+#     if conn != None:
+#         try:
+#            pass
+#         except Exception as e:
+#             print('DB error:', e)
+#             message = "Error deleting booking: {}".format(str(e))
+#     else:
+#         message = 'DB connection Error'
     
-    return render_template()
+#     return render_template()
 
 
 
@@ -726,45 +726,10 @@ def register_route():
     return render_template("registerJinja.html", error=error)
 
 
-# Custom filter for GBP format
-def gbp_format(value):
-    return "£{:,.2f}".format(value)
-
-app.jinja_env.filters['gbp'] = gbp_format
 
 
-@app.route('/admin/top_customers_report')
-def top_customers_report():
-    conn = dbfunc.getConnection()
-    if conn != None:  # Checking if connection is None
-        print('MySQL Connection is established')
-        dbcursor = conn.cursor()  # Creating cursor object
-        limit = 50  # Set the limit to 50, can change this value as needed
-        # Execute the SQL query to retrieve the top customers
-        dbcursor.execute(f'SELECT users.email, users.first_name, users.last_name, SUM(booking.booking_cost) AS total_fare FROM users INNER JOIN booking ON users.user_id = booking.user_id GROUP BY users.user_id ORDER BY total_fare DESC LIMIT {limit}')
-        # Retrieve the results and render the template
-        results = dbcursor.fetchall()
-        print(results)
-        return render_template("top_customers_report.html", results=results)
-    else:
-        print('Connection error')
-        return 'DB Connection Error'
-    
-@app.route('/admin/monthly_sales_report')
-def monthly_sales_report():
-    conn = dbfunc.getConnection()
-    if conn is not None:
-        print('MySQL Connection is established')
-        dbcursor = conn.cursor()
-        # Execute the SQL query to retrieve the monthly sales
-        dbcursor.execute("SELECT DATE_FORMAT(book_date, '%Y-%m') AS month, SUM(booking_cost) AS total_sales FROM booking GROUP BY month ORDER BY month ASC")
-        # Retrieve the results and render the template
-        results = dbcursor.fetchall()
-        print(results)
-        return render_template("monthly_sales_report.html", results=results)
-    else:
-        print('Connection error')
-        return 'DB Connection Error'
+
+
     
 
 
@@ -829,8 +794,69 @@ def admin_features():
     # records from database can be derived, updated, added, deleted
     # user login can be checked..
     print('Welcome ', session['email'], ' as ', session['usertype'])
-    return render_template('adminuser.html', user=session['email'],
-                           message='Admin data from app and admin features can go here ...')
+    return render_template('adminuser.html', user=session['email'])
+
+# Custom filter for GBP format
+def gbp_format(value):
+    return "£{:,.2f}".format(value)
+
+app.jinja_env.filters['gbp'] = gbp_format
+
+
+@app.route('/admin/top_customers_report')
+@login_required
+@admin_required
+def top_customers_report():
+    conn = dbfunc.getConnection()
+    if conn != None:  # Checking if connection is None
+        print('MySQL Connection is established')
+        dbcursor = conn.cursor()  # Creating cursor object
+        limit = 50  # Set the limit to 50, can change this value as needed
+        # Execute the SQL query to retrieve the top customers
+        dbcursor.execute(f'SELECT users.email, users.first_name, users.last_name, SUM(booking.booking_cost) AS total_fare FROM users INNER JOIN booking ON users.user_id = booking.user_id GROUP BY users.user_id ORDER BY total_fare DESC LIMIT {limit}')
+        # Retrieve the results and render the template
+        results = dbcursor.fetchall()
+        print(results)
+        return render_template("top_customers_report.html", results=results)
+    else:
+        print('Connection error')
+        return 'DB Connection Error'
+    
+@app.route('/admin/monthly_sales_report')
+@login_required
+@admin_required
+def monthly_sales_report():
+    conn = dbfunc.getConnection()
+    if conn is not None:
+        print('MySQL Connection is established')
+        dbcursor = conn.cursor()
+        # Execute the SQL query to retrieve the monthly sales
+        dbcursor.execute("SELECT DATE_FORMAT(book_date, '%Y-%m') AS month, SUM(booking_cost) AS total_sales FROM booking GROUP BY month ORDER BY month ASC")
+        # Retrieve the results and render the template
+        results = dbcursor.fetchall()
+        print(results)
+        return render_template("monthly_sales_report.html", results=results)
+    else:
+        print('Connection error')
+        return 'DB Connection Error'
+    
+@app.route('/admin/journey_popularity_report')
+@login_required
+@admin_required
+def journey_popularity_report():
+    conn = dbfunc.getConnection()
+    if conn is not None:
+        print('MySQL Connection is established')
+        dbcursor = conn.cursor()
+        # Execute the SQL query to retrieve the journey popularity
+        dbcursor.execute("SELECT start_location, end_location, COUNT(*) AS total_bookings, SUM(booking_cost) AS total_revenue FROM booking GROUP BY start_location, end_location ORDER BY total_bookings DESC")
+        # Retrieve the results and render the template
+        results = dbcursor.fetchall()
+        print(results)
+        return render_template("journey_popularity_report.html", results=results)
+    else:
+        print('Connection error')
+        return 'DB Connection Error'
 
 
 @app.route('/base')

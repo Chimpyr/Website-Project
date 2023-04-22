@@ -1,0 +1,90 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Journey Popularity Report{% endblock %}
+
+{% block head %}
+    {{super()}}
+    <script>
+        function sortBookings() {
+            let table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("journey_table");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[2];
+                    y = rows[i + 1].getElementsByTagName("TD")[2];
+                    if (Number(x.innerHTML) < Number(y.innerHTML)) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+
+        function sortRevenue() {
+            let table, rows, switching, i, x, y, shouldSwitch;
+            table = document.getElementById("journey_table");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.rows;
+                for (i = 1; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = rows[i].getElementsByTagName("TD")[3];
+                    y = rows[i + 1].getElementsByTagName("TD")[3];
+                    if (Number(x.innerHTML.slice(1)) < Number(y.innerHTML.slice(1))) {
+                        shouldSwitch = true;
+                        break;
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                }
+            }
+        }
+    </script>
+{% endblock %}
+
+{% block content %} 
+
+<div class="row d-flex justify-content-center text-center">
+    <div>
+      <h1 class="pt-4">Journey Popularity Report</h1>    		
+    </div>
+  
+    <div class="col-12 mt-4 overflow-auto" >
+        <table class="table table-responsive table-striped mx-auto">
+            <thead>
+                <tr>
+                    <th>Start City</th>
+                    <th>End City</th>
+                    <th>Total Bookings</th>
+                    <th>Total Revenue</th>
+                </tr>
+            </thead>
+            <tbody id="journey_table">
+                {% for row in results %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>£{{ row[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button class="btn btn-secondary mb-1 mt-1 text-center fw-semibold" onclick="sortBookings()">Sort by Total Bookings</button>
+        <button class="btn btn-secondary mb-1 mt-1 text-center fw-semibold" onclick="sortRevenue()">Sort by Total Revenue</button>
+        <a href="/adminfeatures" class="btn btn-primary mb-1 mt-1 text-center fw-semibold">Return to admin page</a>  
+    </div>
+</div>	
+
+{% endblock %}
