@@ -1,0 +1,36 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Monthly Sales Report{% endblock %}
+
+{% block content %} 
+
+
+<div class="row d-flex justify-content-center text-center">
+    <div>
+      <h1 class="pt-4">Monthly Sales Report</h1>    		
+    </div>
+  
+  
+    <div class="col-12 mt-4 overflow-auto" >
+        <table class="table table-striped mx-auto">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Total Sales</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                <tr>
+                    <td>{{ row[0] }}</td>
+                    <td>{{ row[1]|gbp }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/adminfeatures" class="btn btn-primary mb-1 mt-1 text-center fw-semibold">Return to admin page</a>  
+    </div>
+  </div>	
+
+    
+{% endblock %}

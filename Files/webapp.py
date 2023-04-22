@@ -8,6 +8,11 @@ import gc
 import requests
 import json
 from functools import wraps
+import filters
+from filters import gbp
+
+
+
 app = Flask(__name__)
 app.secret_key = 'suchSecret'  # secret key for sessions
 
@@ -705,8 +710,6 @@ def register_route():
                             return render_template('standarduser.html',
                                                        user=session['email'],
                                                        usertype=session['usertype'])
-                            # return render_template("success.html",
-                            #                        message='User registered successfully and logged in..')
                     else:
                         print('Connection error')
                         return 'DB Connection Error'
@@ -721,6 +724,49 @@ def register_route():
     except Exception as e:
         return render_template("registerJinja.html", error=e)
     return render_template("registerJinja.html", error=error)
+
+
+# Custom filter for GBP format
+def gbp_format(value):
+    return "£{:,.2f}".format(value)
+
+app.jinja_env.filters['gbp'] = gbp_format
+
+
+@app.route('/admin/top_customers_report')
+def top_customers_report():
+    conn = dbfunc.getConnection()
+    if conn != None:  # Checking if connection is None
+        print('MySQL Connection is established')
+        dbcursor = conn.cursor()  # Creating cursor object
+        limit = 50  # Set the limit to 50, can change this value as needed
+        # Execute the SQL query to retrieve the top customers
+        dbcursor.execute(f'SELECT users.email, users.first_name, users.last_name, SUM(booking.booking_cost) AS total_fare FROM users INNER JOIN booking ON users.user_id = booking.user_id GROUP BY users.user_id ORDER BY total_fare DESC LIMIT {limit}')
+        # Retrieve the results and render the template
+        results = dbcursor.fetchall()
+        print(results)
+        return render_template("top_customers_report.html", results=results)
+    else:
+        print('Connection error')
+        return 'DB Connection Error'
+    
+@app.route('/admin/monthly_sales_report')
+def monthly_sales_report():
+    conn = dbfunc.getConnection()
+    if conn is not None:
+        print('MySQL Connection is established')
+        dbcursor = conn.cursor()
+        # Execute the SQL query to retrieve the monthly sales
+        dbcursor.execute("SELECT DATE_FORMAT(book_date, '%Y-%m') AS month, SUM(booking_cost) AS total_sales FROM booking GROUP BY month ORDER BY month ASC")
+        # Retrieve the results and render the template
+        results = dbcursor.fetchall()
+        print(results)
+        return render_template("monthly_sales_report.html", results=results)
+    else:
+        print('Connection error')
+        return 'DB Connection Error'
+    
+
 
 
 # We also write a wrapper for admin user(s). It will check with the user is

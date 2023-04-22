@@ -8,6 +8,7 @@ form.addEventListener('submit', (event) => {
   const password = document.querySelector('input[name="password"]').value;
   const error = document.getElementById('error');
 
+
   if (!firstName || !lastName || !email || !password) {
     error.textContent = 'All fields are required';
     return;
@@ -19,7 +20,7 @@ form.addEventListener('submit', (event) => {
   }
 
   if (!validatePassword(password)) {
-    error.textContent = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number';
+    error.textContent = 'Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one special character, and one number';
     return;
   }
 
@@ -32,6 +33,6 @@ function validateEmail(email) {
 }
 
 function validatePassword(password) {
-  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  return re.test(String(password));
+  const re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  return re.test(password);
 }

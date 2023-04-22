@@ -37,6 +37,6 @@ function validateEmail(email) {
 }
 
 function validatePassword(password) {
-  const re = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-  return re.test(String(password));
+  const re = /^(?=.*\d)(?=.*[!@#$%^&*])(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+  return re.test(password);
 }

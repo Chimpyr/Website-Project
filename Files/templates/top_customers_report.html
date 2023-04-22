@@ -1,0 +1,51 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Top Customers Reports{% endblock %}
+
+{% block content %} 
+
+
+<div class="row d-flex justify-content-center text-center">
+    <div>
+      <h1 class="pt-4">Top Customers</h1>    		
+    </div>
+  
+  
+    <div class="col-12 mt-4 overflow-auto" >
+        <table class="table table-striped table-responsive mx-auto">
+            <thead>
+                <tr>
+                    <!-- uses bootstrap to hide the not fully necessary column on small screens -->
+                    <!-- https://getbootstrap.com/docs/4.0/utilities/display/#:~:text=Hiding%20elements,-For%20faster%20mobile&text=To%20hide%20elements%20simply%20use,for%20any%20responsive%20screen%20variation. -->
+                    <th>Email</th>
+                    <th>First Name</th>
+                    <th class="last d-none d-lg-block">Last Name</th>
+                    <th>Total Fare</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for result in results %}
+                    <tr>
+                        <td>{{ result[0] }}</td>
+                        <td>{{ result[1] }}</td>
+                        <td class="last d-none d-lg-block">{{ result[2] }}</td>
+                        <td>{{ result[3]|gbp }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="/adminfeatures" class="btn btn-primary mb-1 mt-1 text-center fw-semibold">Return to admin page</a>  
+    </div>
+  </div>	
+
+
+
+
+
+{% endblock %}
+
+
+{% block footer %}
+    {{ super() }}
+{% endblock %}
+
