@@ -70,6 +70,16 @@ def bookingView():
     else:
         user_id = getUserID()
 
+
+
+    bookings = getBookings()
+    return render_template('bookingView.html', bookings=bookings, user_id=user_id)
+    
+
+def getBookings():
+
+    user_id = getUserID()
+
     conn = dbfunc.getConnection()
     if conn != None:  # Checking if connection is None
         dbcursor = conn.cursor()  # Creating cursor object
@@ -86,13 +96,12 @@ def bookingView():
         bookings = dbcursor.fetchall()
         dbcursor.close()
         conn.close()  # Connection must be closed
-        return render_template('bookingView.html', bookings=bookings, user_id=user_id)
+        return bookings
     else:
             print('DB connection Error')
             return 'DB Connection Error'
-    
 
-    
+
 @app.route('/delete-booking', methods=['POST'])
 def delete_booking():
     #This one is self explanatory, it deletes the booking from the database
@@ -125,20 +134,23 @@ def delete_booking():
             conn.commit()
             cursor.close()
             conn.close()
-            message = f"Booking Cancelled successfully. Cancellation charge: {cancellation_charge:.2f}."
+            
+            #get the bookings to populate the table - do it after deleting the booking to show new data
+            bookings = getBookings()
+            message = f"Booking deleted successfully. Cancellation charge: {cancellation_charge:.2f}."
             alert_type = "success"
+            
         except Exception as e:
             print('DB error:', e)
             message = "Error deleting booking: {}".format(str(e))
-            if (format(str(e)) == "400 Bad Request: The browser (or proxy) sent a request that this server could not understand."):
-                message = "There was an Error Cancelling Booking because the Booking ID was not found or selected."
             alert_type = "danger"
     else:
         message = 'DB connection Error'
         alert_type = "danger"
     
-    return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type)
+    return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
     # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
+
 
 
 # @app.route('/edit_booking/<string:id>/', methods=['GET', 'POST'])
@@ -353,9 +365,6 @@ def selectBooking():
             print(return_available_seats)
 
             
-
-
-
         if existing_bookings is None:
             existing_bookings = 0
         print("existing_bookings")
