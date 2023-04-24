@@ -73,7 +73,16 @@ def bookingView():
 
 
     bookings = getBookings()
-    return render_template('bookingView.html', bookings=bookings, user_id=user_id)
+
+    # Check if message and alert_type query parameters are set
+    message = request.args.get('message')
+    alert_type = request.args.get('alert_type')
+
+    if message is None:
+        return render_template('bookingView.html', bookings=bookings, user_id=user_id)
+    else:
+        return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
+        
     
 
 def getBookings():
@@ -137,7 +146,8 @@ def delete_booking():
             
             #get the bookings to populate the table - do it after deleting the booking to show new data
             bookings = getBookings()
-            message = f"Booking deleted successfully. Cancellation charge: {cancellation_charge:.2f}."
+
+            message = f"Booking deleted successfully. Cancellation charge: £{cancellation_charge:.2f}."
             alert_type = "success"
             
         except Exception as e:
@@ -148,6 +158,9 @@ def delete_booking():
         message = 'DB connection Error'
         alert_type = "danger"
     
+
+    # redirect to bookingView with updated bookings
+    return redirect(url_for('bookingView', bookings=bookings, user_id=user_id, message=message, alert_type=alert_type))
     return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
     # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
 
