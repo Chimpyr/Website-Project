@@ -40,7 +40,7 @@
                   </div>
               {% endif %}
           {% endif %}
-
+          
 
           {% if session['usertype'] == 'admin' %}
           <h1 class="pt-4">Admin Booking Editor</h1>
@@ -48,9 +48,7 @@
           <h1 class="pt-4">Here Are Your Current Bookings {{session['username']}}</h1> 
           {% else %}
           
-          {% endif %}
-
-          
+          {% endif %}       
         </div>
         <div>
 
@@ -99,11 +97,12 @@
             <input type="hidden" name="user_id" value="{{ user_id }}">
             <button type="submit" class="btn btn-danger" name="delete" onclick="return confirm('Are you sure you want to Cancel this booking? There may be a charge.')">Cancel Booking</button>
             <!-- <input type="submit" value="Delete Booking"> -->
-            <a class="btn btn-primary ms-2" href="/edit-booking" role="button">Edit Booking</a>
-          </form>
-          
+            <button type="submit" class="btn btn-primary" name="edit">Edit The Booking</button>
+            {% if session['usertype'] == 'admin' %}
+            <a class="btn btn-primary ms-2" href="/edit-booking/{{ booking[0] }}" role="button">Edit Booking</a>
+            {% endif %}
+          </form>     
         </div>
-
       </div>
     </div>
 
