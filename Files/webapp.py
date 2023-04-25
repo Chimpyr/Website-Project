@@ -61,159 +61,6 @@ def book_route():
         return 'DB Connection Error'
 
 
-@app.route('/bookingview')
-def bookingView():
-    #This lets the user view their bookings
-
-    if request.method == 'POST':
-        user_id = int(request.form.get('user_id'))
-    else:
-        user_id = getUserID()
-
-
-    bookings = getBookings()
-
-    # Check if message and alert_type query parameters are set
-    message = request.args.get('message')
-    alert_type = request.args.get('alert_type')
-
-    if message is None:
-        return render_template('bookingView.html', bookings=bookings, user_id=user_id)
-    else:
-        return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
-        
-    
-
-def getBookings(limit=None):
-    user_id = getUserID()
-
-    conn = dbfunc.getConnection()
-    if conn != None:
-        dbcursor = conn.cursor()
-
-        if session['usertype'] == 'admin':
-            query = "SELECT * FROM booking"
-        else:
-            query = "SELECT * FROM booking WHERE user_id = %s"
-        
-        if limit is not None:
-            query += " LIMIT %s"
-        else:
-            query += " LIMIT %s"
-            limit = 100
-
-        if session['usertype'] == 'admin':
-            dbcursor.execute(query, (limit,))
-        else:
-            dbcursor.execute(query, (user_id, limit,))
-
-        bookings = dbcursor.fetchall()
-        dbcursor.close()
-        conn.close()
-        return bookings
-    else:
-        print('DB connection Error')
-        return 'DB Connection Error'
-
-
-@app.route('/delete-booking', methods=['POST'])
-def delete_booking():
-    #This one is self explanatory, it deletes the booking from the database
-
-    # Delete the selected booking from the database
-    conn = dbfunc.getConnection()
-    if conn != None:
-        try:
-            # Retrieve the user ID and booking details from the form data
-            user_id = int(request.form['user_id'])
-            booking_id = int(request.form['booking_id'])
-            date = request.form['date']
-            print(date)
-            fare = request.form['fare']
-            print(fare)
-
-            # Calculate the cancellation period
-            days_before_booking = (datetime.strptime(date, '%Y-%m-%d') - datetime.now()).days
-            if days_before_booking >= 60:
-                cancellation_charge = 0
-            elif days_before_booking >= 30:
-                cancellation_charge = 0.5 * float(fare)
-            else:
-                cancellation_charge = float(fare)
-
-            # Delete the booking from the database
-            cursor = conn.cursor()
-            query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
-            cursor.execute(query, (user_id, booking_id))
-            conn.commit()
-            cursor.close()
-            conn.close()
-            
-            #get the bookings to populate the table - do it after deleting the booking to show new data
-            bookings = getBookings()
-
-            message = f"Booking deleted successfully. Cancellation charge: £{cancellation_charge:.2f}."
-            alert_type = "success"
-            
-        except Exception as e:
-            print('DB error:', e)
-            message = "Error deleting booking: {}".format(str(e))
-            alert_type = "danger"
-    else:
-        message = 'DB connection Error'
-        alert_type = "danger"
-    
-
-    # redirect to bookingView with updated bookings
-    return redirect(url_for('bookingView', bookings=bookings, user_id=user_id, message=message, alert_type=alert_type))
-    return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
-    # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
-
-
-
-'''
-This function takes the booking ID and a dictionary of booking information as parameters and updates the corresponding row in the database.
-'''
-def update_booking(booking_id, booking):
-    conn = dbfunc.getConnection()
-    if conn != None:
-        try:
-            cursor = conn.cursor()
-            query = "UPDATE booking SET date = %s, fare = %s, user_id = %s WHERE booking_id = %s"
-            cursor.execute(query, (booking['date'], booking['fare'], booking['user_id'], booking_id))
-            conn.commit()
-            cursor.close()
-            conn.close()
-        except Exception as e:
-            print('DB error:', e)
-    else:
-        print('DB connection Error')
-        return 'DB Connection Error'
-
-
-@app.route('/edit-booking/<string:booking_id>', methods=['GET', 'POST'])
-def edit_booking(booking_id):
-
-    # Get the booking information from the database 
-    conn = dbfunc.getConnection()
-    if conn != None:
-        dbcursor = conn.cursor()
-        dbcursor.execute("SELECT FROM booking WHERE booking_id = %s", (booking_id,))
-        booking = dbcursor.fetchone()
-        dbcursor.close()
-        conn.close()
-    else:
-        print('DB connection Error')
-        return 'DB Connection Error'
-    
-    if request.method == 'POST':
-        # Update the booking information in the database
-        update_booking(booking_id, request.form)
-        return redirect(url_for('bookingView', message='Booking updated successfully', alert_type='success'))
-
-    return render_template('editBooking.html', booking=booking)
-
-
 
 
 
@@ -823,6 +670,213 @@ def standard_user_required(f):
 # this means that only users with user type standard can access this function
 # the function implements features related to standard users
 
+@app.route('/bookingview', methods=['GET', 'POST'])
+def bookingView():
+
+    # Check if message and alert_type query parameters are set
+    message = request.args.get('message')
+    alert_type = request.args.get('alert_type')
+
+    #This lets the user view their bookings
+
+    if request.method == 'POST':
+        print('POST')
+        user_id = int(request.form.get('user_id'))
+        if 'delete' in request.form:
+                    print('DELETE')
+                    return delete_booking()
+
+        elif 'edit' in request.form:
+            print('EDIT')
+            # add your code to edit the booking with this ID
+            # and redirect the user to the booking edit page
+            # Retrieve the user ID and booking details from the form data
+            booking_id = int(request.form['booking_id'])
+            # get booking data using the booking id, the selected booking, then pass that to the edit-booking html page
+            conn = dbfunc.getConnection()
+            if conn != None:
+                try:
+                    # retrieve the booking details from the database
+                    cursor = conn.cursor()
+                    query = "SELECT * FROM booking WHERE booking_id = %s"
+                    cursor.execute(query, (booking_id,))
+                    booking = cursor.fetchone()
+                    cursor.close()
+                    conn.close()
+                    print(booking)
+                    return render_template('editBooking.html', booking=booking)
+                except Exception as e:
+                    print('DB error:', e)
+                    message = "Error retrieving booking: {}".format(str(e))
+                    alert_type = "danger"
+                    return render_template('bookingView.html', message=message, alert_type=alert_type)
+    else:
+        print('GET')
+        user_id = getUserID()
+
+
+    bookings = getBookings()
+
+    
+
+    if message is None:
+        return render_template('bookingView.html', bookings=bookings, user_id=user_id)
+    else:
+        return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
+        
+    
+
+def getBookings(limit=None):
+    user_id = getUserID()
+
+    conn = dbfunc.getConnection()
+    if conn != None:
+        dbcursor = conn.cursor()
+
+        if session['usertype'] == 'admin':
+            query = "SELECT * FROM booking"
+        else:
+            query = "SELECT * FROM booking WHERE user_id = %s"
+        
+        if limit is not None:
+            query += " LIMIT %s"
+        else:
+            query += " LIMIT %s"
+            limit = 100
+
+        if session['usertype'] == 'admin':
+            dbcursor.execute(query, (limit,))
+        else:
+            dbcursor.execute(query, (user_id, limit,))
+
+        bookings = dbcursor.fetchall()
+        dbcursor.close()
+        conn.close()
+        return bookings
+    else:
+        print('DB connection Error')
+        return 'DB Connection Error'
+
+
+def delete_booking():
+    #This one is self explanatory, it deletes the booking from the database
+
+    # Delete the selected booking from the database
+    conn = dbfunc.getConnection()
+    if conn != None:
+        try:
+            # Retrieve the user ID and booking details from the form data
+            user_id = int(request.form['user_id'])
+            booking_id = int(request.form['booking_id'])
+            date = request.form['date']
+            print(date)
+            fare = request.form['fare']
+            print(fare)
+
+            # Calculate the cancellation period
+            days_before_booking = (datetime.strptime(date, '%Y-%m-%d') - datetime.now()).days
+            if days_before_booking >= 60:
+                cancellation_charge = 0
+            elif days_before_booking >= 30:
+                cancellation_charge = 0.5 * float(fare)
+            else:
+                cancellation_charge = float(fare)
+
+            # Delete the booking from the database
+            cursor = conn.cursor()
+            query = "DELETE FROM booking WHERE user_id = %s AND booking_id = %s"
+            cursor.execute(query, (user_id, booking_id))
+            conn.commit()
+            cursor.close()
+            conn.close()
+            
+            #get the bookings to populate the table - do it after deleting the booking to show new data
+            bookings = getBookings()
+
+            message = f"Booking deleted successfully. Cancellation charge: £{cancellation_charge:.2f}."
+            alert_type = "success"
+            
+        except Exception as e:
+            print('DB error:', e)
+            message = "Error deleting booking: {}".format(str(e))
+            alert_type = "danger"
+    else:
+        message = 'DB connection Error'
+        alert_type = "danger"
+    
+
+    # redirect to bookingView with updated bookings
+    return redirect(url_for('bookingView', bookings=bookings, user_id=user_id, message=message, alert_type=alert_type))
+    return render_template('bookingView.html', user_id=user_id, message=message, alert_type=alert_type, bookings=bookings)
+    # return redirect(url_for('bookingView', user_id=user_id, message=message, alert_type=alert_type))
+
+
+
+
+@admin_required
+@login_required
+@app.route('/edit-booking/<string:booking_id>', methods=['GET', 'POST'])
+def edit_booking(booking_id):
+
+    # Get the booking information from the database 
+    conn = dbfunc.getConnection()
+    if conn != None:
+        dbcursor = conn.cursor()
+        #booking_id = int(booking_id)
+
+        # use the bookikng_id to get the booking details
+        query = "SELECT * FROM booking WHERE booking_id = %s"
+        dbcursor.execute(query, (booking_id,))
+        booking = dbcursor.fetchone()
+
+        dbcursor.close()
+        conn.close()
+    else:
+        print('DB connection Error')
+        return 'DB Connection Error'
+    
+    if request.method == 'POST':
+        # Update the booking information in the database
+        update_booking(booking_id, request.form)
+        return redirect(url_for('bookingView', message='Booking updated successfully', alert_type='success'))
+
+    return render_template('editBooking.html', booking=booking)
+
+'''
+This function takes the booking ID and a dictionary of booking information as parameters and updates the corresponding row in the database.
+'''
+def update_booking(booking_id, booking):
+    conn = dbfunc.getConnection()
+    if conn != None:
+        try:
+            cursor = conn.cursor()
+            print('the booking is below FOR UPDATE_BOOKING')
+            print(booking_id)
+            print(booking)
+            start_date = booking['start_date']
+            start_location = booking['start_location']
+            start_time = booking['start_time']
+            end_time = booking['end_time']
+            end_location = booking['end_location']
+            passengerNo = booking['passenger_no']
+            travelClass = booking['travelClass']
+            fare = booking['fare']
+
+            #update the booking in the database using the form data
+            query = "UPDATE booking SET start_date = %s, start_location = %s, end_location = %s, start_time = %s, end_time = %s,passenger_no = %s, fare_type = %s, booking_cost = %s WHERE booking_id = %s"
+            cursor.execute(query, (start_date, start_location, end_location, start_time, end_time, passengerNo, travelClass, fare, booking_id))
+
+
+            conn.commit()
+            cursor.close()
+            conn.close()
+        except Exception as e:
+            print('DB error:', e)
+    else:
+        print('DB connection Error')
+        return 'DB Connection Error'
+
+
 
 @app.route('/userfeatures')
 @login_required
@@ -857,6 +911,9 @@ def gbp_format(value):
     return "£{:,.2f}".format(value)
 
 app.jinja_env.filters['gbp'] = gbp_format
+
+
+
 
 
 @app.route('/admin/top_customers_report')

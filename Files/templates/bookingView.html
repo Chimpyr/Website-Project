@@ -3,22 +3,7 @@
   {% block title %}Booking View{% endblock %}
   {% block head %}
       {{super()}}
-      <script>
-        function validateBookingSelection() {
-            var booking_id = document.querySelector('input[name="booking_id"]:checked');
-            if (!booking_id) {
-                alert("Please select a booking to cancel.");
-                return false;
-            }
-            return true;
-        }
-    
-        document.querySelector("#cancel-booking-form").addEventListener("submit", function(event) {
-            if (!validateBookingSelection()) {
-                event.preventDefault();
-            }
-        });
-    </script>
+
     
   {% endblock %}
 
@@ -52,7 +37,7 @@
         </div>
         <div>
 
-          <form action="/delete-booking"  id="cancel-booking-form" method="POST">
+          <form action="/bookingview"  id="cancel-booking-form" method="POST">
             <div class="overflow-auto">
               <table class="table-responsive table-striped table-sm mx-auto" id="scrollTable">
                 <thead>
@@ -97,14 +82,26 @@
             <input type="hidden" name="user_id" value="{{ user_id }}">
             <button type="submit" class="btn btn-danger" name="delete" onclick="return confirm('Are you sure you want to Cancel this booking? There may be a charge.')">Cancel Booking</button>
             <!-- <input type="submit" value="Delete Booking"> -->
-            <button type="submit" class="btn btn-primary" name="edit">Edit The Booking</button>
+
             {% if session['usertype'] == 'admin' %}
-            <a class="btn btn-primary ms-2" href="/edit-booking/{{ booking[0] }}" role="button">Edit Booking</a>
+            <button type="submit" class="btn btn-primary" name="edit">Edit The Booking</button>
             {% endif %}
           </form>     
         </div>
       </div>
     </div>
+
+
+    <script>
+      const form = document.getElementById('cancel-booking-form');
+      form.addEventListener('submit', function(event) {
+        const selectedOption = document.querySelector('input[name="booking_id"]:checked');
+        if (!selectedOption) {
+          event.preventDefault();
+          alert('Please select a booking to cancel or edit.');
+        }
+      });
+    </script>
 
   {% endblock %}
 
