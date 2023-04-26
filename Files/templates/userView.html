@@ -1,0 +1,86 @@
+{% extends "baseHTML.html" %}
+
+{% block title %}Template{% endblock %}
+{% block head %}
+    {{super()}}
+{% endblock %}
+
+{% block content %} 
+
+<!-- python flask iterable to view all the users in the database using passed users array -->
+
+<div class="container ps-md-0">
+    <div class="row d-flex justify-content-center text-center">
+      <div>		
+
+        {% if message %}
+            {% if alert_type == "success" %}
+                <div class="alert alert-success alert-dismissible fade show mt-4 pt-4" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% else %}
+                <div class="alert alert-danger alert-dismissible fade show mt-4 pt-4" role="alert"> 
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endif %}
+        
+        <h1 class="pt-4">Admin User Editor</h1>  
+      </div>
+      <div>
+
+        <form action="/userview"  id="user_view_form" method="POST">
+          <div class="overflow-auto">
+            <table class="table-responsive table-striped table-sm mx-auto" id="scrollTable">
+              <thead>
+                <tr>
+                    <th></th>
+                    <th>User ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Email</th>
+                    <th>User Type</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for user in users %}
+                <tr>
+                  <td><input type="radio" name="user_id" value="{{ user[0] }}"></td>
+                  <td>{{ user[0] }}</td>
+                  <td>{{ user[1] }}</td>
+                  <td>{{ user[2] }}</td>
+                  <td>{{ user[3] }}</td>
+                  <td>{{ user[5] }}</td>
+                  <!-- <input type="hidden" name="user_id" value="{{ user[0]}}"> -->
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <br>
+          
+          <button type="submit" class="btn btn-danger" name="delete">Delete User</button>
+          <button type="submit" class="btn btn-primary" name="edit">Edit The User</button>
+        </form>     
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById('user_view_form');
+    form.addEventListener('submit', function(event) {
+      const selectedOption = document.querySelector('input[name="booking_id"]:checked');
+      if (!selectedOption) {
+        event.preventDefault();
+        alert('Please select a booking to cancel or edit.');
+      }
+    });
+  </script>
+
+{% endblock %}
+
+{% block footer %}
+    {{super()}}
+{% endblock %}

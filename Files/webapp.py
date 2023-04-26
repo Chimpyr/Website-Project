@@ -665,11 +665,9 @@ def standard_user_required(f):
             return render_template('loginJinja.html', error='You need to login first as standard user')
     return wrap
 
-# /userfeatures is loaded for standard users
-# Here we us @standard_user_login_required wrapper ...
-# this means that only users with user type standard can access this function
-# the function implements features related to standard users
 
+
+@login_required
 @app.route('/bookingview', methods=['GET', 'POST'])
 def bookingView():
 
@@ -709,6 +707,7 @@ def bookingView():
                     print('DB error:', e)
                     message = "Error retrieving booking: {}".format(str(e))
                     alert_type = "danger"
+                    print(booking)
                     return render_template('bookingView.html', message=message, alert_type=alert_type)
     else:
         print('GET')
@@ -718,7 +717,7 @@ def bookingView():
     bookings = getBookings()
 
     
-
+    print(bookings)
     if message is None:
         return render_template('bookingView.html', bookings=bookings, user_id=user_id)
     else:
@@ -793,8 +792,15 @@ def delete_booking():
             #get the bookings to populate the table - do it after deleting the booking to show new data
             bookings = getBookings()
 
-            message = f"Booking deleted successfully. Cancellation charge: £{cancellation_charge:.2f}."
+            # Display a success message for users, if admin then say cancelled and charge to user
+            if session['usertype'] == 'standard':
+                message = f"Booking deleted successfully. Cancellation charge: £{cancellation_charge:.2f}."
+            else:
+                message = f"Booking deleted successfully. Customer Cancellation charge: £{cancellation_charge:.2f}."
+
             alert_type = "success"
+
+            
             
         except Exception as e:
             print('DB error:', e)
@@ -876,7 +882,10 @@ def update_booking(booking_id, booking):
         print('DB connection Error')
         return 'DB Connection Error'
 
-
+# /userfeatures is loaded for standard users
+# Here we us @standard_user_login_required wrapper ...
+# this means that only users with user type standard can access this function
+# the function implements features related to standard users
 
 @app.route('/userfeatures')
 @login_required
@@ -905,6 +914,65 @@ def admin_features():
     # user login can be checked..
     print('Welcome ', session['email'], ' as ', session['usertype'])
     return render_template('adminuser.html', user=session['email'])
+
+
+#route for viewing users in the database - admin only
+@app.route('/userview', methods=['GET', 'POST'])
+@login_required
+@admin_required
+def view_users():
+    #get the users from the database
+    users = getUsers()
+
+    #if the form is submitted check if the user wants to delete a user or edit a user
+    if request.method == 'POST':
+        if 'delete' in request.form:
+            print('DELETE')
+            return delete_user()
+        elif 'edit' in request.form:
+            print('EDIT')
+            pass
+
+    return render_template('userView.html', users=users)
+
+
+#function to get the users from the database
+def getUsers():
+    conn = dbfunc.getConnection()
+    if conn != None:
+        dbcursor = conn.cursor()
+        query = "SELECT * FROM users"
+        dbcursor.execute(query)
+        users = dbcursor.fetchall()
+        dbcursor.close()
+        conn.close()
+        return users
+    else:
+        print('DB connection Error')
+        return 'DB Connection Error'
+
+#function that will delete a user from the database using the user_id from the form
+def delete_user():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        conn = dbfunc.getConnection()
+        if conn != None:
+            try:
+                cursor = conn.cursor()
+                #query = "DELETE FROM users WHERE user_id = %s"
+                #cursor.execute(query, (user_id,))
+                print('USER DELETE')
+                conn.commit()
+                cursor.close()
+                conn.close()
+            except Exception as e:
+                print('DB error:', e)
+        else:
+            print('DB connection Error')
+            return 'DB Connection Error'
+    return redirect(url_for('view_users'))
+
+
 
 # Custom filter for GBP format
 def gbp_format(value):
