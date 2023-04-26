@@ -909,7 +909,6 @@ def user_features():
 @login_required
 @admin_required
 def admin_features():
-    print('create / amend records / delete records / generate reports')
     # records from database can be derived, updated, added, deleted
     # user login can be checked..
     print('Welcome ', session['email'], ' as ', session['usertype'])
@@ -922,18 +921,27 @@ def admin_features():
 @admin_required
 def view_users():
     #get the users from the database
-    users = getUsers()
+    
+    message = ''
+    alert_type = ''
 
     #if the form is submitted check if the user wants to delete a user or edit a user
     if request.method == 'POST':
         if 'delete' in request.form:
             print('DELETE')
-            return delete_user()
+            message = delete_user()
+            if message == 'User deleted successfully':
+                alert_type = 'success'
         elif 'edit' in request.form:
             print('EDIT')
-            pass
+            message = change_user_type()
+            # if message not '' then change alert type to success
+            if message == 'User Type Changed Successfully':
+                alert_type = 'success'
+    
+    users = getUsers()
 
-    return render_template('userView.html', users=users)
+    return render_template('userView.html', users=users, message=message, alert_type=alert_type)
 
 
 #function to get the users from the database
@@ -965,6 +973,8 @@ def delete_user():
                 conn.commit()
                 cursor.close()
                 conn.close()
+                message = 'User Deleted Successfully'         
+                return message
             except Exception as e:
                 print('DB error:', e)
         else:
@@ -972,7 +982,26 @@ def delete_user():
             return 'DB Connection Error'
     return redirect(url_for('view_users'))
 
-
+#function that will change the usertype to the opposite of what it currently is
+def change_user_type():
+    if request.method == 'POST':
+        user_id = request.form['user_id']
+        conn = dbfunc.getConnection()
+        if conn != None:
+            try:
+                cursor = conn.cursor()
+                # switches the usertype from standard to admin or vice versa
+                query = "UPDATE users SET usertype = IF(usertype = 'standard', 'admin', 'standard') WHERE user_id = %s"
+                cursor.execute(query, (user_id,))
+                print('USER TYPE CHANGE')
+                conn.commit()
+                cursor.close()
+                conn.close()
+                message = 'User Type Changed Successfully'         
+                return message
+            except Exception as e:
+                print('DB error:', e)
+    
 
 # Custom filter for GBP format
 def gbp_format(value):
@@ -1048,13 +1077,4 @@ def base_route():
 if __name__ == '__main__':
     app.run(debug=True)
 
-# Process:
-# 1. Put html files under templates folder             DONE
-# 2. Put static files (i.e. css and images and js files) under static folder      DONE
-    # 2a. you may create sub-folders i.e. css for CSS files, img for Images
-# 3. Make app i.e. .py file and create decorates/endpoints for each webpage so that you can link them using url_for()          DONE
-    # 3a. use render_template() to return the html page
-# 4. Update <link> tag in html files to refer to css by using url_for()
-# 5. Update <a> tag href attribute to call end point for each page by using url_for()
-# 6. Update <img> tag src attribute to link to images e.g., 'static/image.jpeg'
-# 7. Update css file if you're using background images e.g., 'static/image.jpeg'
+

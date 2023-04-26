@@ -53,7 +53,7 @@
                   <td>{{ user[2] }}</td>
                   <td>{{ user[3] }}</td>
                   <td>{{ user[5] }}</td>
-                  <!-- <input type="hidden" name="user_id" value="{{ user[0]}}"> -->
+                  <input type="hidden" name="user_type" value="{{ user[5]}}">
                 </tr>
                 {% endfor %}
               </tbody>
@@ -62,7 +62,7 @@
           <br>
           
           <button type="submit" class="btn btn-danger" name="delete">Delete User</button>
-          <button type="submit" class="btn btn-primary" name="edit">Edit The User</button>
+          <button type="submit" class="btn btn-primary" name="edit">Change User Type</button>
         </form>     
       </div>
     </div>
@@ -71,10 +71,10 @@
   <script>
     const form = document.getElementById('user_view_form');
     form.addEventListener('submit', function(event) {
-      const selectedOption = document.querySelector('input[name="booking_id"]:checked');
+      const selectedOption = document.querySelector('input[name="user_id"]:checked');
       if (!selectedOption) {
         event.preventDefault();
-        alert('Please select a booking to cancel or edit.');
+        alert('Please select a user to delete or edit.');
       }
     });
   </script>
