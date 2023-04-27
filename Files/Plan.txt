@@ -1,3 +1,5 @@
+--FIX NAV BAR
+--change password
 
 From Main Page;
     //When logged in Log in button will open user account
@@ -63,7 +65,6 @@ Booking Logic
     //    Before 60 days - no charges
     //    Between 30 to 60 days - 50% charge
     //    Within 30 days - 100% charge. 
-    QUESTION: WHAT TO DO WITH CANCELLATIONS? CURRENTLY only giving message
 
 
 

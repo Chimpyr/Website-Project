@@ -7,29 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{ url_for ('static', filename ='styles/defaultStyles.css')}}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
     <title>
         {% block title %}{% endblock %}</title>
     {% endblock %}
 </head>
 <body>
-    
-    <header class="header-ht"> 
+    <header class="header-ht overflow-auto "> 
     {% block header %}  
         <a class="logo text-decoration-none text-reset" href="{{ url_for('index') }}">Horizon Travels</a>
         <nav class="nav-links">
             {% if session['usertype'] == 'admin' %}
-            <li><a href="{{ url_for('admin_features') }}">Account</a></li>
+            <li><a  class="nav-item nav-link" href="{{ url_for('admin_features') }}">Account</a></li>
             {% elif session['usertype'] == 'standard' %}
-            <li><a href="{{ url_for('user_features') }}">Account</a></li>
+            <li><a  class="nav-item nav-link" href="{{ url_for('user_features') }}">Account</a></li>
             {% else %}
-            <li><a href="{{ url_for('login_route') }}">Log In</a></li>
+            <li><a  class="nav-item nav-link" href="{{ url_for('login_route') }}">Log In</a></li>
             {% endif %}
             
-            <li><a href="{{ url_for('book_route') }}">Book Now</a></li>
-            <li><a href="{{ url_for('about_route') }}">About</a></li>
-
-
+            <li><a  class="nav-item nav-link"  href="{{ url_for('book_route') }}">Book Now</a></li>
+            <li><a  class="nav-item nav-link"  href="{{ url_for('about_route') }}">About</a></li>
         </nav>
     {% endblock %}
     </header>

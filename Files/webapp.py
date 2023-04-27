@@ -114,7 +114,7 @@ def login_route():
                         # print(data[0])
                         if dbcursor.rowcount < 1:  # this mean no user exists
                             error = "User / password does not exist, login again"
-                            return render_template("loginJinja", error=error)
+                            return render_template("loginJinja.html", form=form, error=error)
                         else:
                             # data = dbcursor.fetchone()[0] #extracting password
                             # verify passowrd hash and password received from user
@@ -141,7 +141,7 @@ def login_route():
                     print('login start 1.10')
                     return render_template("loginJinja.html", form=form, error=error)
     except Exception as e:
-        error = str(e) + " <br/> Invalid credentials, try again."
+        error = "Invalid credentials, try again."
         return render_template("loginJinja.html", form=form, error=error)
 
     return render_template("loginJinja.html", form=form, error=error)
@@ -488,9 +488,7 @@ def booking_confirm():
             dbcursor.close()
             conn.close()
 
-            your_route_handler()
-
-
+            route_handler()
            
 
             return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber, isOneWay=isOneWay, returnDate=returnDate)
@@ -498,7 +496,7 @@ def booking_confirm():
             print('DB connection Error')
             return redirect(url_for('index'))
 
-def your_route_handler():
+def route_handler():
     if request.method == 'POST':
             try:
                 payload = request.json
@@ -539,18 +537,22 @@ def changePassword():
                         else:
                             # verify password hash and password received from user
                             if sha256_crypt.verify(request.form['old_password'], str(data[0])): #
-                                query = "UPDATE users SET password_hash=%s WHERE email=%s;"
-                                dbcursor.execute(query, (newPasswordHashed, email))
-                                conn.commit()
-                                #change password to newPassword hash where email is...
-                                dbcursor.close()
-                                conn.close()
-                                gc.collect()
-                                #loggs user out - makes them have to re log in with new password
-                                flash("Your password has been changed successfully!")
-                                return redirect(url_for("logout", message="PU"))
-                                # return redirect(url_for("logout", message='PU', next=url_for("index")))
-                                # return redirect(url_for("logout", next=url_for("index", optionalmessage='ddd')))
+                                #if passwords match, check if new password and confirm new password match
+                                if new_password == confirm_new_password:
+                                    query = "UPDATE users SET password_hash=%s WHERE email=%s;"
+                                    dbcursor.execute(query, (newPasswordHashed, email))
+                                    conn.commit()
+                                    #change password to newPassword hash where email is...
+                                    dbcursor.close()
+                                    conn.close()
+                                    gc.collect()
+                                    #loggs user out - makes them have to re log in with new password
+                                    flash("Your password has been changed successfully!")
+                                    return redirect(url_for("logout", message="PU"))
+                                    # return redirect(url_for("logout", message='PU', next=url_for("index")))
+                                    # return redirect(url_for("logout", next=url_for("index", optionalmessage='ddd')))
+                                else:
+                                    error = "New password and confirm new password do not match, try again."
                             else:
                                 error = "Invalid credentials email/password, try again."
                     else:
