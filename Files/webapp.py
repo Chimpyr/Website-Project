@@ -13,6 +13,7 @@ from filters import gbp
 
 
 
+
 app = Flask(__name__)
 app.secret_key = 'suchSecret'  # secret key for sessions
 
@@ -477,19 +478,11 @@ def booking_confirm():
                 returnDate = payload['returnDate']
             else:
                 returnDate = None
-            
-
-
             print('Booking Confirmed')
-
             cardnumber = cardnumber[-4:-1]
-            print(cardnumber)
-
             dbcursor.close()
             conn.close()
-
-            route_handler()
-           
+            route_handler() #send booking data to route handler, getting the payload from the form and printing it
 
             return render_template('booking_confirm.html', outbound_bookingdata=outbound_bookingdata, return_bookingdata=return_bookingdata, cardnumber=cardnumber, isOneWay=isOneWay, returnDate=returnDate)
         else:
@@ -506,6 +499,10 @@ def route_handler():
                 return 'Error'
     else:
             return 'Invalid request method'
+
+
+
+
 
 
 @app.route('/changePassword', methods=['POST', 'GET'])

@@ -2,9 +2,17 @@
 {% extends "baseHTML.html" %}
 
   {% block title %}Book - Confirmation{% endblock %}
-  
+  {% block head %}
+   {{super()}}
+   <script defer src="{{ url_for('static', filename='scripts/receiptScript.js') }}"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.min.js"></script>
+
+
+  {% endblock %}
   {% block content %}
   <div class="container ps-md-0">
+    <div id="bookingData">
       <h1>Booking Complete</h1> 
       <div class="row">
         <div class="col-md-6">
@@ -50,39 +58,15 @@
           Payment: Card ending with ****** {{cardnumber}} <br/>
     
         <input type="hidden" name="bookingid" value="{{outbound_bookingdata[8]}}" />   
-      </form>  
-
-    
-
-
-    <!--[journeyid, departcity, arrivalcity, outdate, returndate, adultseats, childseats, totalfare, bookingid, deptTime, arrivTime]-->
-
-      <!-- Booking ID: {{outbound_bookingdata[8]}} <br/>
-      Departure City : {{outbound_bookingdata[1]}} <br/>
-      Departure Date : {{outbound_bookingdata[3]}} <br/>
-      Departure Time : {{outbound_bookingdata[9]}} <br/>
-      Arrival City : {{outbound_bookingdata[2]}} <br/>  
-      Arrival Time : {{outbound_bookingdata[10]}} <br/>
-  
-      {% if not isOneWay %}
-        Return Date: {{returnDate}} <br/>
-        Total Fare : {{ outbound_bookingdata[6]|int + return_bookingdata[6]|int }}<br/>
-        <input type="hidden" name="totalfare" value="{{outbound_bookingdata[6] + return_bookingdata[6]}}" /> 
-      {% else %}
-        Total Fare: {{ outbound_bookingdata[6] }} <br/>
-        <input type="hidden" name="totalfare" value="{{outbound_bookingdata[6]}}" /> 
-      {% endif %}
-    
-  
-      Adult Seats : {{outbound_bookingdata[5]}} <br/>
-      Child Seats : {{outbound_bookingdata[6]}} <br/> -->
-  
-
-
-
+    </div>  
     <br/>
-    <a href="/" class="btn btn-primary mt-4">Go to Home Page</a>
+    <button class="btn btn-secondary mt-4" id="downloadBtn" onclick="createPDF()">Download Receipt</button>
 
+
+    <a href="/" class="btn btn-primary mt-4">Go to Home Page</a>
+  
     </div>
   </div>
+  
+
   {% endblock %}
