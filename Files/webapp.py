@@ -990,6 +990,12 @@ def change_user_type():
             try:
                 cursor = conn.cursor()
                 # switches the usertype from standard to admin or vice versa
+
+                #checks if current users id is equal to selected id
+                #if it is then return error message
+                if user_id == session['user_id']:
+                    message = 'You cannot change your own user type'
+                    return message
                 query = "UPDATE users SET usertype = IF(usertype = 'standard', 'admin', 'standard') WHERE user_id = %s"
                 cursor.execute(query, (user_id,))
                 print('USER TYPE CHANGE')
