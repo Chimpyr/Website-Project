@@ -27,8 +27,13 @@
 
         {% endif %}
 
-        <form action="{{ url_for('about_route') }}">
-            <input type="submit" value="Learn More" />
+        <!-- <form action="{{ url_for('book_route') }}">
+            <input class="btn btn-primary" type="submit" value="BOOK NOW" />
+        </form> -->
+        <form action="{{ url_for('book_route') }}">
+        <div class="form-btn">
+            <button type="submit" class="submit-btn btn btn-lg btn-primary btn-login text-uppercase fw-semibold">BOOK NOW</button>
+          </div>
         </form>
         
     </div>

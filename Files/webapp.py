@@ -123,6 +123,7 @@ def login_route():
                                 # set session variables
                                 session['logged_in'] = True
                                 session['email'] = request.form['email']
+                                session['id'] = getUserID() # get user id from db, I wouldn't do this but I implemented the function before using session and it works/convinient
                                 # fake user name to be used in the welcome messages
                                 session['username'] = email.split('@')[0]
                                 session['usertype'] = str(data[1])
@@ -375,7 +376,7 @@ def getUserID():
             dbcursor = conn.cursor()  # Creating cursor object
 
         #getting the user_id to store booking with user's id
-            userEmail = user=session['email']
+            userEmail = session['email']
             print("email is : " + userEmail)
             dbcursor.execute("SELECT user_id FROM users WHERE email = %s;", (userEmail,))
             userID = dbcursor.fetchone()[0] # gets the straight int value instead of tuple
@@ -607,6 +608,7 @@ def register_route():
                             gc.collect()
                             session['logged_in'] = True  #  session variables
                             session['email'] = email
+                            session['id'] = getUserID()
                             # default all users are standard
                             session['usertype'] = 'standard'
                             return render_template('standarduser.html',
@@ -993,17 +995,20 @@ def change_user_type():
 
                 #checks if current users id is equal to selected id
                 #if it is then return error message
-                if user_id == session['user_id']:
+                currentUserID = str(getUserID())
+                if user_id == currentUserID:
                     message = 'You cannot change your own user type'
+                    print('nah you cant do that')
                     return message
-                query = "UPDATE users SET usertype = IF(usertype = 'standard', 'admin', 'standard') WHERE user_id = %s"
-                cursor.execute(query, (user_id,))
-                print('USER TYPE CHANGE')
-                conn.commit()
-                cursor.close()
-                conn.close()
-                message = 'User Type Changed Successfully'         
-                return message
+                else:
+                    query = "UPDATE users SET usertype = IF(usertype = 'standard', 'admin', 'standard') WHERE user_id = %s"
+                    cursor.execute(query, (user_id,))
+                    print('USER TYPE CHANGE')
+                    conn.commit()
+                    cursor.close()
+                    conn.close()
+                    message = 'User Type Changed Successfully'         
+                    return message
             except Exception as e:
                 print('DB error:', e)
     
