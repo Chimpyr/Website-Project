@@ -1,4 +1,4 @@
-
+//22011032_Jacob_Craig_
 
 // THIS PART OF THE CODE ENSURES USER CAN ONLY SELECT 90 ADVANCE BOOKINGS AND CANNOT SELECT DAYS BEFORE TODAY (THE CURRENT DAY)
 
@@ -148,6 +148,14 @@ function handleSubmit(event) {
     alert("Return date cannot be on a Sunday");
     return;
   }
+
+  //check if is is return flight, if so, check if return date is filled
+  if (returnDateInput.value == "" && document.getElementById("roundtrip").checked) {
+    // Display an alert
+    alert("Return date cannot be empty");
+    return;
+  }
+  
 
   // If we got this far, the dates are valid, so submit the form
   form.submit();

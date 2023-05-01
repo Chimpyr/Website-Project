@@ -1,6 +1,4 @@
---FIX NAV BAR
---change password
---recipt!!!!!
+
 
 From Main Page;
     //When logged in Log in button will open user account

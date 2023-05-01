@@ -1,12 +1,13 @@
 import mysql.connector
 from mysql.connector import errorcode
- 
+#22011032_Jacob_Craig 
 # MYSQL CONFIG VARIABLES
 hostname    = "localhost"
 username    = "root"
 passwd  = "pass" 
 database = "horizon_travels_test"
 
+# Function to get connection to the database, code from Zaheer
 def getConnection():    
     try:
         conn = mysql.connector.connect(host=hostname,                              

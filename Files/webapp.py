@@ -1,3 +1,4 @@
+#22011032_Jacob_Craig_
 import mysql.connector
 import dbfunc
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, flash
@@ -37,6 +38,7 @@ def about_route():
     return render_template('aboutJinja.html')
 
 
+# Code for start of booking process, code by Zaheer, and further modified
 @app.route('/book')
 def book_route():
     #This sorts out the inputs from the form and passes them to the book function to be used in the query later
@@ -64,7 +66,7 @@ def book_route():
 
 
 
-
+# Code for getting the list of cities, code by Zaheer, and further modified
 @app.route('/returncity/', methods=['POST', 'GET'])
 def ajax_returncity():
     print('/returncity')
@@ -92,6 +94,7 @@ def ajax_returncity():
 
 
 # /login/ route receives email and password and checks against db user/pw
+# Code by Zaheer, and further modified 
 @app.route('/login', methods=["GET", "POST"])
 def login_route():
     form = {}
@@ -101,7 +104,6 @@ def login_route():
             email = request.form['email']
             password = request.form['password']
             form = request.form
-            print('login start 1.1')
 
             if email != None and password != None:  # check if un or pw is none
                 conn = dbfunc.getConnection()
@@ -148,7 +150,7 @@ def login_route():
 
     return render_template("loginJinja.html", form=form, error=error)
 
-
+# code by Zaheer, and further modified
 def login_required(f):
     @wraps(f)
     def wrap(*args, **kwargs):
@@ -181,7 +183,7 @@ def logout():
 
 
 
-
+# Some code by Zaheer, and further modified
 @app.route('/selectBooking/', methods=['POST', 'GET'])
 @login_required
 def selectBooking():
@@ -479,6 +481,7 @@ def booking_confirm():
                 returnDate = payload['returnDate']
             else:
                 returnDate = None
+            # code by Zaheer, and further modified
             print('Booking Confirmed')
             cardnumber = cardnumber[-4:-1]
             dbcursor.close()
@@ -637,7 +640,7 @@ def register_route():
     
 
 
-
+# code by Zaheer, and further modified
 # We also write a wrapper for admin user(s). It will check with the user is
 # logged in and the usertype is admin and only then it will allow user to
 # perform admin functions
@@ -652,7 +655,7 @@ def admin_required(f):
             return render_template('loginJinja.html', error='You need to login first as admin user')
     return wrap
 
-
+# code by Zaheer, and further modified
 # We also write a wrapper for standard user(s). It will check with the usertype is
 # standard and user is logged in, only then it will allow user to perform standard user functions
 def standard_user_required(f):
@@ -849,9 +852,8 @@ def edit_booking(booking_id):
 
     return render_template('editBooking.html', booking=booking)
 
-'''
-This function takes the booking ID and a dictionary of booking information as parameters and updates the corresponding row in the database.
-'''
+
+#This function takes the booking ID and a dictionary of booking information as parameters and updates the corresponding row in the database.
 def update_booking(booking_id, booking):
     conn = dbfunc.getConnection()
     if conn != None:
@@ -887,7 +889,7 @@ def update_booking(booking_id, booking):
 # Here we us @standard_user_login_required wrapper ...
 # this means that only users with user type standard can access this function
 # the function implements features related to standard users
-
+# code by Zaheer, and further modified
 @app.route('/userfeatures')
 @login_required
 @standard_user_required
@@ -905,7 +907,7 @@ def user_features():
 # this means that only users with user type admin can access this function
 # the function implements features related to admin users
 
-
+# code by Zaheer, and further modified
 @app.route('/adminfeatures')
 @login_required
 @admin_required
@@ -968,8 +970,8 @@ def delete_user():
         if conn != None:
             try:
                 cursor = conn.cursor()
-                #query = "DELETE FROM users WHERE user_id = %s"
-                #cursor.execute(query, (user_id,))
+                query = "DELETE FROM users WHERE user_id = %s"
+                cursor.execute(query, (user_id,))
                 print('USER DELETE')
                 conn.commit()
                 cursor.close()
